@@ -367,6 +367,24 @@ class ControlPanel {
         $('#org-limit').change(function() {
             Hyperparams.maxOrganisms = parseInt($('#org-limit').val());
         });
+        $('#default-metabolism').change(function() {
+            Hyperparams.defaultMetabolism = parseFloat($('#default-metabolism').val());
+        });
+        $('#min-metabolism').change(function() {
+            Hyperparams.minMetabolism = parseFloat($('#min-metabolism').val());
+        });
+        $('#max-metabolism').change(function() {
+            Hyperparams.maxMetabolism = parseFloat($('#max-metabolism').val());
+        });
+        $('#metabolism-food-cost').change(function() {
+            Hyperparams.metabolismFoodCost = parseFloat($('#metabolism-food-cost').val());
+        });
+        $('#metabolism-mutation-rate').change(function() {
+            Hyperparams.metabolismMutationRate = parseFloat($('#metabolism-mutation-rate').val());
+        });
+        $('#metabolism-mutation-step').change(function() {
+            Hyperparams.metabolismMutationStep = parseFloat($('#metabolism-mutation-step').val());
+        });
 
         $('#evolved-mutation').change( function() {
             if (this.checked) {
@@ -470,6 +488,12 @@ class ControlPanel {
         $('#see-through-self').prop('checked', Hyperparams.seeThroughSelf);
         $('#global-mutation').val(Hyperparams.globalMutability);
         $('#independent-eye-decisions').prop('checked', Hyperparams.evolveIndependentEyeDecisions);
+        $('#default-metabolism').val(Hyperparams.defaultMetabolism);
+        $('#min-metabolism').val(Hyperparams.minMetabolism);
+        $('#max-metabolism').val(Hyperparams.maxMetabolism);
+        $('#metabolism-food-cost').val(Hyperparams.metabolismFoodCost);
+        $('#metabolism-mutation-rate').val(Hyperparams.metabolismMutationRate);
+        $('#metabolism-mutation-step').val(Hyperparams.metabolismMutationStep);
         
         if (!Hyperparams.useGlobalMutability) {
             $('.global-mutation-container').css('display', 'none');

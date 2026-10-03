@@ -32,6 +32,13 @@ const Hyperparams = {
 
         this.extraMoverFoodCost = 0;
 
+        this.defaultMetabolism = 1;
+        this.minMetabolism = 0.25;
+        this.maxMetabolism = 2;
+        this.metabolismMutationRate = 10;
+        this.metabolismMutationStep = 0.1;
+        this.metabolismFoodCost = 0.002;
+
         this.maxOrganisms = -1;
     },
 

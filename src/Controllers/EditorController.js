@@ -140,6 +140,11 @@ class EditorController extends CanvasController{
         $('#move-range-edit').change ( function() {
             this.env.organism.move_range = parseInt($('#move-range-edit').val());
         }.bind(this));
+
+        $('#metabolism-edit').change ( function() {
+            this.env.organism.metabolism = this.env.organism.clampMetabolism(parseFloat($('#metabolism-edit').val()));
+            $('#metabolism-edit').val(this.env.organism.metabolism);
+        }.bind(this));
 		
         $('#mutation-rate-edit').change ( function() {
             this.env.organism.mutability = parseInt($('#mutation-rate-edit').val());
@@ -194,6 +199,9 @@ class EditorController extends CanvasController{
 
         $('#species-name-edit').val(org.species.name);
         $('.cell-count').text("Cell count: "+org.anatomy.cells.length);
+        $('#metabolism-edit').val(org.metabolism);
+        $('#metabolism-edit').attr('min', Hyperparams.minMetabolism);
+        $('#metabolism-edit').attr('max', Hyperparams.maxMetabolism);
         if (this.setMoveRangeVisibility()){
             $('#move-range-edit').val(org.move_range);
         }

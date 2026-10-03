@@ -77,6 +77,7 @@ const FossilRecord = {
         this.pop_counts = [];
         this.species_counts = [];
         this.av_mut_rates = [];
+        this.metabolism_stats = [];
         this.av_cells = [];
         this.av_cell_counts = [];
         this.updateData();
@@ -88,6 +89,9 @@ const FossilRecord = {
         this.pop_counts.push(this.env.organisms.length);
         this.species_counts.push(this.numExtantSpecies());
         this.av_mut_rates.push(this.env.averageMutability());
+        this.metabolism_stats.push(this.calcMetabolismStats(tick));
+        while (this.metabolism_stats.length > this.record_size_limit)
+            this.metabolism_stats.shift();
         this.calcCellCountAverages();
         while (this.tick_record.length > this.record_size_limit) {
             this.tick_record.shift();
@@ -97,6 +101,24 @@ const FossilRecord = {
             this.av_cells.shift();
             this.av_cell_counts.shift();
         }
+    },
+
+    calcMetabolismStats(tick=this.env.total_ticks) {
+        let total = 0;
+        let count = 0;
+        let min = Infinity;
+        let max = -Infinity;
+        for (let org of this.env.organisms) {
+            if (!org.living || !org.anatomy.is_mover)
+                continue;
+            total += org.metabolism;
+            count++;
+            min = Math.min(min, org.metabolism);
+            max = Math.max(max, org.metabolism);
+        }
+        if (count === 0)
+            return {tick: tick, mean: 0, min: 0, max: 0};
+        return {tick: tick, mean: total / count, min: min, max: max};
     },
 
     calcCellCountAverages() {
@@ -157,6 +179,7 @@ const FossilRecord = {
             pop_counts:this.pop_counts,
             species_counts:this.species_counts,
             av_mut_rates:this.av_mut_rates,
+            metabolism_stats:this.metabolism_stats,
             av_cells:this.av_cells,
             av_cell_counts:this.av_cell_counts,
         };
@@ -171,9 +194,11 @@ const FossilRecord = {
 
     loadRaw(record) {
         SerializeHelper.overwriteNonObjects(record, this);
-        for (let key in record.records) {
-            this[key] = record.records[key];
+        let records = record.records || {};
+        for (let key in records) {
+            this[key] = records[key];
         }
+        this.metabolism_stats = Array.isArray(records.metabolism_stats) ? records.metabolism_stats : [];
     }
 
 }
