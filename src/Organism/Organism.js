@@ -14,6 +14,7 @@ class Organism {
         this.env = env;
         this.lifetime = 0;
         this.food_collected = 0;
+        this.num_offspring = 0;
         this.living = true;
         this.anatomy = new Anatomy(this)
         this.direction = Directions.down; // direction of movement
@@ -95,6 +96,8 @@ class Organism {
             org.r = new_r;
             this.env.addOrganism(org);
             org.updateGrid();
+            this.num_offspring++;
+            FossilRecord.recordBirth();
             if (mutated) {
                 FossilRecord.addSpecies(org, this.species);
             }
@@ -293,6 +296,8 @@ class Organism {
             var real_r = this.r + cell.rotatedRow(this.rotation);
             this.env.changeCell(real_c, real_r, CellStates.food, null);
         }
+        FossilRecord.recordDeath(this);
+        this.species.recordDeath(this);
         this.species.decreasePop();
         this.living = false;
     }

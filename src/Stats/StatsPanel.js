@@ -2,10 +2,22 @@ const PopulationChart = require("./Charts/PopulationChart");
 const SpeciesChart = require("./Charts/SpeciesChart");
 const MutationChart = require("./Charts/MutationChart");
 const CellsChart = require("./Charts/CellsChart");
+const SpeciesPopulationChart = require("./Charts/SpeciesPopulationChart");
+const BirthsDeathsChart = require("./Charts/BirthsDeathsChart");
+const SpeciationChart = require("./Charts/SpeciationChart");
+const DiversityChart = require("./Charts/DiversityChart");
+const SpeciesLifespanChart = require("./Charts/SpeciesLifespanChart");
+const DominantSpeciesChart = require("./Charts/DominantSpeciesChart");
+const FoodChart = require("./Charts/FoodChart");
+const LifeHistoryChart = require("./Charts/LifeHistoryChart");
+const LifeHistorySuccessChart = require("./Charts/LifeHistorySuccessChart");
 const FossilRecord = require("./FossilRecord");
 
 
-const ChartSelections = [PopulationChart, SpeciesChart, CellsChart, MutationChart];
+// order must match the options in #chart-option
+const ChartSelections = [PopulationChart, SpeciesChart, CellsChart, MutationChart, SpeciesPopulationChart,
+    BirthsDeathsChart, SpeciationChart, DiversityChart, SpeciesLifespanChart, DominantSpeciesChart,
+    FoodChart, LifeHistoryChart, LifeHistorySuccessChart];
 
 class StatsPanel {
     constructor(env) {
@@ -53,10 +65,15 @@ class StatsPanel {
         $('#species-count').text("Number of Species: " + FossilRecord.numExtantSpecies());
         let top_species = FossilRecord.getMostPopulousSpecies();
         if (top_species)
-            $('#top-species').text("Most Populous Species: \"" + top_species.name + "\" (" + top_species.population + " organisms)");
+            $('#top-species').text("Most Populous Species: \"" + top_species.name + "\" (" + top_species.population + " organisms, " +
+                (this.env.total_ticks - top_species.start_tick) + " ticks old, lineage depth " + top_species.generation + ")");
         else    
             $('#top-species').text("Most Populous Species: None");
         $('#largest-org').text("Largest Organism Ever: " + this.env.largest_cell_count + " cells");
+        let shannon = FossilRecord.latest('shannon') || 0;
+        $('#diversity').text("Species Diversity (Shannon): " + shannon.toFixed(2) + " (≈ " + Math.exp(shannon).toFixed(1) + " effective species)");
+        $('#extinct-count').text("Extinct Species Recorded: " + FossilRecord.numExtinctSpecies());
+        $('#food-count').text("Food Cells: " + FossilRecord.latest('food_counts'));
         $('#avg-mut').text("Average Mutation Rate: " + Math.round(this.env.averageMutability() * 100) / 100);
     }
 
