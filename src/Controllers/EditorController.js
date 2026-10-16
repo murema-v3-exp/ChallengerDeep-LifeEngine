@@ -155,20 +155,61 @@ class EditorController extends CanvasController{
     }
 
     defineSaveLoad() {
+        this.orgFiles={}
+        this.orgFolderName='';
         $('#save-org').click(()=>{
             let org = this.env.organism.serialize();
-            let data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(org));
+            const json = JSON.stringify(org);
+            let data = "data:text/json;charset=utf-8," + encodeURIComponent(json);
             let downloadEl = document.getElementById('download-el');
             downloadEl.setAttribute("href", data);
             const name = this.env.organism.species.name ? this.env.organism.species.name : "organism";
             downloadEl.setAttribute("download", name+".json");
             downloadEl.click();
+
+            this.orgFiles[name] = new File([json], name, {type: 'application/json'});
+            this.populateOrgSelect();
         });
         $('#load-org').click(() => {
             LoadController.loadJson((org)=>{
                 this.loadOrg(org);
             });
         });
+        $('#choose-org-folder').click(()=> $('#org-folder-input').click());
+        $('#org-folder-input').change((e)=>{
+            this.orgFiles = {};
+            for(const f of e.target.files){
+                const parts= f.webkitRelativePath.split('/');
+                this.orgFolderName = parts[0];
+                if(parts.length===2&&f.name.toLowerCase().endsWith('.json'))
+                    this.orgFiles[f.name] = f;
+            }
+            e.target.value='';
+            this.populateOrgSelect();
+        });
+
+        $('#org-folder-select').change(async (e) =>{
+            const file = this.orgFiles[e.target.value];
+            if (!file) return ;
+            try {
+                this.loadOrg(JSON.parse(await file.text()));
+            }catch(err){
+                console.error(err);
+                alert('Failed to load '+ file.name);
+            }
+            e.target.value='';
+        });
+
+        
+    }
+
+    populateOrgSelect() {
+        const select = $('#org-folder-select');
+        select.find('option:not(:first)').remove();
+        const names = Object.keys(this.orgFiles).sort();
+        select.find('option:first').text(`- ${this.orgFolderName || 'this session'} (${names.length}) -`);
+        for( const n of names)
+            select.append($('<option>').val(n).text(n.slice(0,-5).replace(/[_-]/g, ' ')));
     }
 
     loadOrg(org) {
@@ -181,6 +222,8 @@ class EditorController extends CanvasController{
         if (org.species_name)
             this.env.organism.species.name = org.species_name;
     }
+
+
 
     clearDetailsPanel() {
         this.updateDetails();
