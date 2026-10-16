@@ -241,6 +241,9 @@ class ControlPanel {
     }
 
     defineWorldControls() {
+
+
+
         $('#fill-window').change(function() {
             if (this.checked)
                 $('.col-row-input').css('display' ,'none');
@@ -316,6 +319,45 @@ class ControlPanel {
             };
             reader.readAsText(files[0]);
         });
+
+        this.envFiles={}
+        this.envFolderName='';
+
+        $('#env-choose-folder').click(()=> $('#env-folder-input').click());
+        $('#env-folder-input').change((e)=>{
+            this.envFiles = {};
+            for(const f of e.target.files){
+                const parts= f.webkitRelativePath.split('/');
+                this.envFolderName = parts[0];
+                if(parts.length===2&&f.name.toLowerCase().endsWith('.json'))
+                    this.envFiles[f.name] = f;
+            }
+            e.target.value='';
+            this.populateEnvSelect();
+        });
+
+        $('#env-folder-select').change(async (e) =>{
+            const file = this.envFiles[e.target.value];
+            if (!file) return ;
+            try {
+                this.loadEnv(JSON.parse(await file.text()));
+            }catch(err){
+                console.error(err);
+                alert('Failed to load '+ file.name);
+            }
+            e.target.value='';
+        });
+
+
+    }
+
+    populateEnvSelect() {
+        const select = $('#env-folder-select');
+        select.find('option:not(:first)').remove();
+        const names = Object.keys(this.envFiles).sort();
+        select.find('option:first').text(`- ${this.envFolderName || 'this session'} (${names.length}) -`);
+        for( const n of names)
+            select.append($('<option>').val(n).text(n.slice(0,-5).replace(/[_-]/g, ' ')));
     }
 
     loadEnv(env) {
