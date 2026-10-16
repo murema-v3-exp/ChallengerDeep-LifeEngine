@@ -372,7 +372,7 @@ class ControlPanel {
         if (was_running)
             this.setPaused(false);
         this.updateHyperparamUIValues();
-        this.env_controller.resetView();
+        //this.env_controller.resetView();
         if (this.tab_id == 'stats')
             this.stats_panel.startAutoRender();
     }
