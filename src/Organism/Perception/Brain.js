@@ -202,6 +202,18 @@ class Brain {
         if (this.decisions.length > 0) {
             this.num_states = this.decisions[0].length;
         }
+        for(const eye of this.decisions){
+            for (const map of eye){
+                for (const cell of CellStates.all){
+                    if(!map[cell.name]||map[cell.name].decision === undefined){
+                        map[cell.name] = {
+                            decision: Decision.getRandom(),
+                            state: Math.floor(Math.random()* this.num_states)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     randomizeDecisions() {

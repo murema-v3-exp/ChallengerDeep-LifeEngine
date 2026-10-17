@@ -214,6 +214,11 @@ input:hover,input:active {
     width: 30px;
     height: 30px;
 }
+.editor-buttons > button,
+.editor-buttons > select{
+    width: 30px;
+    height: 30px;
+}
 .edit-mode-btn.selected {
     background-color: var(--btn-hover);
 }
