@@ -8,6 +8,7 @@ class Cell{
         this.row = row;
         this.x = x;
         this.y = y;
+        this.food_tick =0;
     }
 
     setType(state) {

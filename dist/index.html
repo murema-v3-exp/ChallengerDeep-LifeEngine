@@ -245,6 +245,12 @@
 						<label for="food-blocks" title='When on, reproduction will fail if offspring intersect with food. When off, offspring will remove blocking food.'>Food blocks reproduction</label>
 						<input type="checkbox" id="food-blocks" checked>
 						<br>
+						<label for="food-decay" title="When on, food decays after a number of ticks">Food decays</label>
+						<input type="checkbox" id="food-decay">
+						<br>
+						<label for="food-decay-ticks" title="Ticks before food decays">Food decay time</label>
+						<input type="number" id="food-decay-ticks" value=100 min="1" step="1">
+						<br>
 						<label for="extra-mover-cost" title='Additional food cost for movers to reproduce'>Extra mover reproduction cost:</label>
 						<input type="number" id="extra-mover-cost" value=0 max="1000" step="1">
 						<br>

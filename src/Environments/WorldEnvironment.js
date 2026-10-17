@@ -26,6 +26,7 @@ class WorldEnvironment extends Environment{
         this.reset_count = 0;
         this.total_ticks = 0;
         this.data_update_rate = 100;
+        this.food_queue=[];
         FossilRecord.setEnv(this);
     }
 
@@ -37,6 +38,9 @@ class WorldEnvironment extends Environment{
                 to_remove.push(i);
             }
         }
+        if(Hyperparams.foodDecay)
+            this.decayFood();
+
         this.removeOrganisms(to_remove);
         if (Hyperparams.foodDropProb > 0) {
             this.generateFood();
@@ -109,9 +113,15 @@ class WorldEnvironment extends Environment{
 
     changeCell(c, r, state, owner) {
         super.changeCell(c, r, state, owner);
+        const cell = this.grid_map.cellAt(c, r);
         this.renderer.addToRender(this.grid_map.cellAt(c, r));
         if(state == CellStates.wall)
             this.walls.push(this.grid_map.cellAt(c, r));
+        if(Hyperparams.foodDecay && state == CellStates.food){
+            cell.food_tick = this.total_ticks;
+            this.food_queue.push({cell: cell, tick: this.total_ticks});
+        }
+            
     }
 
     clearWalls() {
@@ -168,6 +178,7 @@ class WorldEnvironment extends Environment{
         this.total_mutability = 0;
         this.total_ticks = 0;
         this.largest_cell_count = 0;
+        this.food_queue =[];
         FossilRecord.clear_record();
         if (reset_life)
             this.OriginOfLife();
@@ -205,6 +216,7 @@ class WorldEnvironment extends Environment{
 
     loadRaw(env) { // species name->stats map, evolution controls, 
         this.organisms = [];
+        this.food_queue =[];
         FossilRecord.clear_record();
         let cell_size = env.grid.cell_size ? env.grid.cell_size : this.grid_map.cell_size;
         this.resizeGridColRow(cell_size, env.grid.cols, env.grid.rows)
@@ -212,6 +224,7 @@ class WorldEnvironment extends Environment{
         for (let wall of env.grid.walls) {
             this.walls.push(this.grid_map.cellAt(wall.c, wall.r));
         }
+        
 
         // create species map
         let species = {};
@@ -244,7 +257,41 @@ class WorldEnvironment extends Environment{
         SerializeHelper.overwriteNonObjects(env, this);
         if ($('#override-controls').is(':checked'))
             Hyperparams.loadJsonObj(env.controls)
+        if(Hyperparams.foodDecay)
+            this.rebuildFoodQueue();
         this.renderer.renderFullGrid(this.grid_map.grid);
+    }
+    decayFood(){
+        let i = 0;
+        while(i<this.food_queue.length){
+            const entry = this.food_queue[i];
+            const cell = entry.cell;
+        if(cell.state!==CellStates.food||cell.food_tick != entry.tick){
+            i++;
+            continue;
+        }
+        if(this.total_ticks-entry.tick < Hyperparams.foodDecayTicks){
+            break;
+        }
+
+        this.changeCell(cell.col,cell.row,CellStates.decaying_food,null);
+        i++;
+
+        }
+        this.food_queue.splice(0,i);
+
+    }
+
+    rebuildFoodQueue(){
+        this.food_queue =[];
+        for(const col of this.grid_map.grid){
+            for (const cell of col){
+                if (cell.state === CellStates.food){
+                    cell.food_tick = this.total_ticks;
+                    this.food_queue.push({cell: cell, tick: this.total_ticks});
+                }
+            }
+        }
     }
 }
 

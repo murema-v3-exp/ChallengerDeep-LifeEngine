@@ -173,6 +173,7 @@ class Brain {
             };
         }
         decisions[CellStates.food.name].decision = Decision.chase;
+        decisions[CellStates.decaying_food.name].decision = Decision.getRandom();
         decisions[CellStates.killer.name].decision = Decision.retreat;
         return decisions;
     }

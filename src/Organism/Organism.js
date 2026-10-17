@@ -263,7 +263,7 @@ class Organism {
     }
 
     isPassableCell(cell, parent){
-        return cell != null && (cell.state == CellStates.empty || cell.owner == this || cell.owner == parent || cell.state == CellStates.food);
+        return cell != null && (cell.state == CellStates.empty || cell.owner == this || cell.owner == parent || cell.state == CellStates.food||cell.state == CellStates.decaying_food);
     }
 
     isClear(col, row, rotation=this.rotation) {

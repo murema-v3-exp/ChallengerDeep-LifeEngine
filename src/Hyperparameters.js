@@ -33,6 +33,8 @@ const Hyperparams = {
         this.extraMoverFoodCost = 0;
 
         this.maxOrganisms = -1;
+        this.foodDecayTicks = 100;
+        this.foodDecay = false;
     },
 
     loadJsonObj(obj) {
