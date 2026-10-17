@@ -12,7 +12,8 @@ const color_schemes = {
         "armor":"#7230DB",
         "eye":"#B6C1EA",
         "eye-slit": "#0E1318",
-        "decaying_food": "#545213"
+        "decaying_food": "#545213",
+        "acid_stomach": "#B5E61D"
     },
     "classic":{
         "empty":"#121D29",
@@ -25,7 +26,8 @@ const color_schemes = {
         "armor":"purple",
         "eye":"yellow",
         "eye-slit": "#121D29",
-        "decaying_food": "#545213"
+        "decaying_food": "#545213",
+        "acid_stomach": "#B5E61D"
     },
     "soft":{
         "empty":"#0B0E11",
@@ -38,7 +40,8 @@ const color_schemes = {
         "armor":"#7C69B5",
         "eye":"#AEB4C2",
         "eye-slit": "#0B0E11",
-        "decaying_food": "#545213"
+        "decaying_food": "#545213",
+        "acid_stomach": "#B5E61D"
     },
     "dark":{
         "empty":"black",
@@ -51,7 +54,8 @@ const color_schemes = {
         "armor":"#5632B5",
         "eye":"#8892B3",
         "eye-slit": "black",
-        "decaying_food": "#545213"
+        "decaying_food": "#545213",
+        "acid_stomach": "#B5E61D"
     },
     "grayscale":{
         "empty":"black",
@@ -64,7 +68,8 @@ const color_schemes = {
         "armor":"#999999",
         "eye":"#888888",
         "eye-slit": "black",
-        "decaying_food": "#545213"
+        "decaying_food": "#545213",
+        "acid_stomach": "#B5E61D"
     }
 }
 const color_scheme_names = Object.keys(color_schemes);

@@ -63,6 +63,7 @@
 							<div class='cell-legend-type' id='eye' title="Eye: Observes cells and decides movement."></div>
 							<div class='cell-legend-type' id='food' title="Food: Not part of an organism. Once an organism has eaten enough food, it will reproduce."></div>
 							<div class='cell-legend-type' id='wall' title="Wall: Not part of an organism. Blocks movement and reproduction."></div>
+							<div class='cell-legend-type' id='acid_stomach' title="Acid Stomach: Allows organisms to eat decaying food."></div>
 						</div>
 						<div id="color-scheme-container">
 							<label for="color-scheme-select">Color Scheme:</label>
@@ -83,8 +84,8 @@
 				<div id='editor' class='tab'>
 					<div class='left-half' id='editor-panel'>
 						<div class='editor-buttons'>
-							<button id="select" title="Select organism from world. Hotkey: Z"><i class="fa-regular fa-hand-pointer"></i></button>
-							<button id="drop-org" title="Drop organism in world. Hotkey: C"><i class="fa fa-plus"></i></button>
+							<button id="edit-mode-btn select" title="Select organism from world. Hotkey: Z"><i class="fa-regular fa-hand-pointer"></i></button>
+							<button id="edit-mode-btn drop-org" title="Drop organism in world. Hotkey: C"><i class="fa fa-plus"></i></button>
 							<button id="save-org" title="Save Organism"><i class="fa fa-save"></i></button>
 							<button id="load-org" title="Load Organism"><i class="fa fa-upload"></i></button>
 							<button id="choose-org-folder" title="Choose organism folder"><i class="fa fa-folder-open"></i></button>
@@ -107,6 +108,9 @@
 								<div class='cell-type' id='armor' title="Armor: Unharmed by killer cell."></div>
 								<div class='cell-type' id='eye' title="Eye: Looks for cells to move away from or towards. Click again on a placed cell to rotate"></div>
 							</div>
+							<div style='grid-column: 3;'>
+								<div class='cell-type' id='acid_stomach' title="Acid Stomach: Allows organisms to eat decaying food."></div>
+								</div>
 
 							<button id='clear-editor'>Clear</button>
 							<button class='randomize-button' id='generate-random' title="Randomizes organism"><i class="fa fa-random"></i></button>

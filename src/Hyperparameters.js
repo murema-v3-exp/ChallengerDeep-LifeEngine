@@ -33,7 +33,7 @@ const Hyperparams = {
         this.extraMoverFoodCost = 0;
 
         this.maxOrganisms = -1;
-        this.foodDecayTicks = 100;
+        this.foodDecayTicks = 1000;
         this.foodDecay = false;
     },
 

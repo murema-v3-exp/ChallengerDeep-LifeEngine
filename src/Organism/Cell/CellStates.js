@@ -97,7 +97,7 @@ const CellStates = {
     decaying_food: new DecayingFood(),
     acid_stomach: new AcidStomach,
     defineLists() {
-        this.all = [this.empty, this.food, this.wall, this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye,this.decaying_food]
+        this.all = [this.empty, this.food, this.wall, this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye,this.decaying_food,this.acid_stomach]
         this.living = [this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye, this.acid_stomach];
     },
     getRandomName: function() {
