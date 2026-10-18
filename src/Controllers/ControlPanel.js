@@ -452,18 +452,7 @@ class ControlPanel {
         $('#food-blocks').change( function() {
             Hyperparams.foodBlocksReproduction = this.checked;        
         });
-        $("#food-decay").change((e)=>{
-            Hyperparams.foodDecay  =e.target.checked;
-            if(Hyperparams.foodDecay){
-                this.engine.env.rebuildFoodQueue();
-            }else{
-                this.engine.env.food_queue=[];
-
-            }
-        });
-        $("#food-decay-ticks").change((e)=>{
-            Hyperparams.foodDecayTicks = parseInt(e.target.value);
-        });
+        
         $('#dont-kill-same-species').change(function() {
             Hyperparams.dontKillSameSpecies = this.checked;
         });
@@ -496,6 +485,34 @@ class ControlPanel {
             };
             reader.readAsText(files[0]);
         });
+        $("#food-decay").change((e)=>{
+            Hyperparams.foodDecay  =e.target.checked;
+            if(Hyperparams.foodDecay){
+                this.engine.env.rebuildFoodQueue();
+            }else{
+                this.engine.env.food_queue=[];
+
+            }
+        });
+        $("#food-decay-ticks").change((e)=>{
+            Hyperparams.foodDecayTicks = parseInt(e.target.value);
+        });
+        $("#soil-fertility").change((e)=>{
+            Hyperparams.soilFertility = e.target.checked;
+            if(Hyperparams.soilFertility){
+                this.engine.env.rebuildDecayQueue();
+            }else{
+                this.engine.env.decay_queue=[];
+
+            }
+            this.engine.env.renderer.renderFullGrid(this.engine.env.grid_map.grid);
+        });
+        $("#decay-to-fertiliser-ticks").change((e)=>{
+            Hyperparams.decayToFertiliser = parseInt(e.target.value);
+        });
+        $("#base-fertility").change((e)=>{
+            Hyperparams.baseFertility = parseInt(e.target.value);
+        });
     }
 
     setHyperparamDefaults() {
@@ -524,8 +541,16 @@ class ControlPanel {
         $('#see-through-self').prop('checked', Hyperparams.seeThroughSelf);
         $('#global-mutation').val(Hyperparams.globalMutability);
         $('#independent-eye-decisions').prop('checked', Hyperparams.evolveIndependentEyeDecisions);
+        
         $('#food-decay').prop('checked',Hyperparams.foodDecay);
         $('#food-decay-ticks').val(Hyperparams.foodDecayTicks);
+
+        $('#soil-fertility').prop('checked',Hyperparams.soilFertility);
+
+        $('#base-fertility').val(Hyperparams.baseFertility);
+
+        $('#decay-to-fertiliser-ticks').val(Hyperparams.decayToFertiliser);
+
         if (!Hyperparams.useGlobalMutability) {
             $('.global-mutation-container').css('display', 'none');
             $('#avg-mut').css('display', 'block');

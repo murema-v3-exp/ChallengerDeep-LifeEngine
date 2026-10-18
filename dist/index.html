@@ -255,6 +255,15 @@
 						<label for="food-decay-ticks" title="Ticks before food decays">Food decay time</label>
 						<input type="number" id="food-decay-ticks" value=100 min="1" step="1">
 						<br>
+						<label for="soil-fertility" title="When on, soil increases producer food production and decayed food increases fertility of cell">Soil Fertility</label>
+						<input type="checkbox" id="soil-fertility">
+						<br>
+						<label for="decay-to-fertiliser-ticks" title="Ticks before decaying food becomes fertiliser">Decaying food -> fertiliser time</label>
+						<input type="number" id="decay-to-fertiliser-ticks" value=1000 min="1" step="1">
+						<br>
+						<label for="base-fertility" title="Starting fertility of soil, only takes affect on next run">Starting fertility</label>
+						<input type="number" id="base-fertility" value=5 min="1" max="10" step="1">
+						<br>
 						<label for="extra-mover-cost" title='Additional food cost for movers to reproduce'>Extra mover reproduction cost:</label>
 						<input type="number" id="extra-mover-cost" value=0 max="1000" step="1">
 						<br>

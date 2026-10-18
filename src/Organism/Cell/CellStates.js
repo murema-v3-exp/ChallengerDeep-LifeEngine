@@ -1,3 +1,5 @@
+const Hyperparams = require("../../Hyperparameters");
+
 // A cell state is used to differentiate type and render the cell
 class CellState{
     constructor(name) {
@@ -14,6 +16,17 @@ class CellState{
 class Empty extends CellState {
     constructor() {
         super('empty');
+        this.soil_colour = "brown"
+    }
+    render(ctx, cell, size){
+        ctx.fillStyle = this.color;
+        ctx.fillRect(cell.x,cell.y,size,size);
+        if(!Hyperparams.soilFertility||!cell.fertility||cell.fertility<=0) return;
+        const alpha = Math.min(cell.fertility/Hyperparams.maxFertility,1);
+        ctx.globalAlpha = 0.1+0.8*alpha;
+        ctx.fillStyle = this.soil_colour;
+        ctx.fillRect(cell.x,cell.y,size,size);
+        ctx.globalAlpha=1;
     }
 }
 class Food extends CellState {

@@ -33,8 +33,17 @@ const Hyperparams = {
         this.extraMoverFoodCost = 0;
 
         this.maxOrganisms = -1;
+
         this.foodDecayTicks = 1000;
         this.foodDecay = false;
+
+        this.soilFertility = false;
+        this.decayToFertiliser = 1000;
+        this.fertilityPerDecay = 1;
+        this.fertilityUsedPerFoodProduced = 1;
+        this.maxFertility = 10; 
+        this.baseFertility = 5;
+
     },
 
     loadJsonObj(obj) {

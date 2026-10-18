@@ -13,7 +13,8 @@ const color_schemes = {
         "eye":"#B6C1EA",
         "eye-slit": "#0E1318",
         "decaying_food": "#545213",
-        "acid_stomach": "#B5E61D"
+        "acid_stomach": "#B5E61D",
+        "soil": "brown"
     },
     "classic":{
         "empty":"#121D29",
@@ -27,7 +28,8 @@ const color_schemes = {
         "eye":"yellow",
         "eye-slit": "#121D29",
         "decaying_food": "#545213",
-        "acid_stomach": "#B5E61D"
+        "acid_stomach": "#B5E61D",
+        "soil": "brown"
     },
     "soft":{
         "empty":"#0B0E11",
@@ -41,7 +43,8 @@ const color_schemes = {
         "eye":"#AEB4C2",
         "eye-slit": "#0B0E11",
         "decaying_food": "#545213",
-        "acid_stomach": "#B5E61D"
+        "acid_stomach": "#B5E61D",
+        "soil": "brown"
     },
     "dark":{
         "empty":"black",
@@ -55,7 +58,8 @@ const color_schemes = {
         "eye":"#8892B3",
         "eye-slit": "black",
         "decaying_food": "#545213",
-        "acid_stomach": "#B5E61D"
+        "acid_stomach": "#B5E61D",
+        "soil": "brown"
     },
     "grayscale":{
         "empty":"black",
@@ -69,7 +73,8 @@ const color_schemes = {
         "eye":"#888888",
         "eye-slit": "black",
         "decaying_food": "#545213",
-        "acid_stomach": "#B5E61D"
+        "acid_stomach": "#B5E61D",
+        "soil": "brown"
     }
 }
 const color_scheme_names = Object.keys(color_schemes);
@@ -90,6 +95,7 @@ class ColorSchemeSingleton {
             state.color = color_scheme[state.name];
         }
         CellStates.eye.slit_color=color_scheme['eye-slit']
+        CellStates.empty.soil_colour=color_scheme['soil']
         for (var cell_type in color_scheme) {
             $('#'+cell_type+'.cell-type ').css('background-color', color_scheme[cell_type]);
             $('#'+cell_type+'.cell-legend-type').css('background-color', color_scheme[cell_type]);

@@ -1,3 +1,5 @@
+const Hyperparams = require("../../Hyperparameters");
+
 // A cell exists in a grid map.
 class Cell{
     constructor(state, col, row, x, y){
@@ -8,7 +10,11 @@ class Cell{
         this.row = row;
         this.x = x;
         this.y = y;
+
         this.food_tick =0;
+
+        this.fertility = 0;
+        this.decay_tick=0;
     }
 
     setType(state) {

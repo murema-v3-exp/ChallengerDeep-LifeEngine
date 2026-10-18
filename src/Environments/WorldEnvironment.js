@@ -19,6 +19,7 @@ class WorldEnvironment extends Environment{
         this.num_rows = Math.ceil(this.renderer.height / cell_size);
         this.num_cols = Math.ceil(this.renderer.width / cell_size);
         this.grid_map = new GridMap(this.num_cols, this.num_rows, cell_size);
+        this.resetFertility();
         this.organisms = [];
         this.walls = [];
         this.total_mutability = 0;
@@ -26,7 +27,8 @@ class WorldEnvironment extends Environment{
         this.reset_count = 0;
         this.total_ticks = 0;
         this.data_update_rate = 100;
-        this.food_queue=[];
+        this.food_queue=[]; // track food that transitions food -> decaying
+        this.decay_queue=[]; // track decaying food that transitions decaying food -> empty cell + increase cell fertility
         FossilRecord.setEnv(this);
     }
 
@@ -40,6 +42,8 @@ class WorldEnvironment extends Environment{
         }
         if(Hyperparams.foodDecay)
             this.decayFood();
+        if(Hyperparams.soilFertility)
+            this.decayingFoodToFertiliser();
 
         this.removeOrganisms(to_remove);
         if (Hyperparams.foodDropProb > 0) {
@@ -121,6 +125,10 @@ class WorldEnvironment extends Environment{
             cell.food_tick = this.total_ticks;
             this.food_queue.push({cell: cell, tick: this.total_ticks});
         }
+        if(Hyperparams.soilFertility && state == CellStates.decaying_food){
+            cell.decay_tick = this.total_ticks;
+            this.decay_queue.push({cell:cell,tick:this.total_ticks});
+        }
             
     }
 
@@ -174,11 +182,13 @@ class WorldEnvironment extends Environment{
         }
         this.organisms = [];
         this.grid_map.fillGrid(CellStates.empty, !WorldConfig.clear_walls_on_reset);
+        this.resetFertility();
         this.renderer.renderFullGrid(this.grid_map.grid);
         this.total_mutability = 0;
         this.total_ticks = 0;
         this.largest_cell_count = 0;
         this.food_queue =[];
+        this.decay_queue =[];
         FossilRecord.clear_record();
         if (reset_life)
             this.OriginOfLife();
@@ -191,6 +201,7 @@ class WorldEnvironment extends Environment{
         this.renderer.cell_size = cell_size;
         this.renderer.fillShape(rows*cell_size, cols*cell_size);
         this.grid_map.resize(cols, rows, cell_size);
+        this.resetFertility();
     }
 
     resizeFillWindow(cell_size) {
@@ -199,6 +210,7 @@ class WorldEnvironment extends Environment{
         this.num_cols = Math.ceil(this.renderer.width / cell_size);
         this.num_rows = Math.ceil(this.renderer.height / cell_size);
         this.grid_map.resize(this.num_cols, this.num_rows, cell_size);
+        this.resetFertility();
     }
 
     serialize() {
@@ -217,6 +229,7 @@ class WorldEnvironment extends Environment{
     loadRaw(env) { // species name->stats map, evolution controls, 
         this.organisms = [];
         this.food_queue =[];
+        this.decay_queue =[];
         FossilRecord.clear_record();
         let cell_size = env.grid.cell_size ? env.grid.cell_size : this.grid_map.cell_size;
         this.resizeGridColRow(cell_size, env.grid.cols, env.grid.rows)
@@ -257,8 +270,13 @@ class WorldEnvironment extends Environment{
         SerializeHelper.overwriteNonObjects(env, this);
         if ($('#override-controls').is(':checked'))
             Hyperparams.loadJsonObj(env.controls)
+        this.resetFertility();
+
         if(Hyperparams.foodDecay)
             this.rebuildFoodQueue();
+        if(Hyperparams.soilFertility){
+            this.rebuildDecayQueue();
+        }
         this.renderer.renderFullGrid(this.grid_map.grid);
     }
     decayFood(){
@@ -293,6 +311,50 @@ class WorldEnvironment extends Environment{
             }
         }
     }
+
+    decayingFoodToFertiliser(){
+        let i = 0;
+        while(i<this.decay_queue.length){
+            const entry = this.decay_queue[i];
+            const cell = entry.cell;
+        if(cell.state!==CellStates.decaying_food||cell.decay_tick != entry.tick){
+            i++;
+            continue;
+        }
+        if(this.total_ticks-entry.tick < Hyperparams.decayToFertiliser){
+            break;
+        }
+        
+        cell.fertility = Math.min(Hyperparams.maxFertility,cell.fertility+Hyperparams.fertilityPerDecay);
+        this.changeCell(cell.col,cell.row,CellStates.empty,null);
+        i++;
+
+        }
+        this.decay_queue.splice(0,i);
+
+    }
+
+    rebuildDecayQueue(){
+        this.decay_queue =[];
+        for(const col of this.grid_map.grid){
+            for (const cell of col){
+                if (cell.state === CellStates.decaying_food){
+                    cell.decay_tick = this.total_ticks;
+                    this.decay_queue.push({cell: cell, tick: this.total_ticks});
+                }
+            }
+        }
+    }
+
+    resetFertility(){
+        for(const col of this.grid_map.grid){
+            for(const cell of col){
+                cell.fertility = Hyperparams.baseFertility;
+            }
+        }
+    }
+
+
 }
 
 module.exports = WorldEnvironment;
