@@ -384,6 +384,10 @@ class ControlPanel {
         $('#seasons-enabled').change(function() {
             Hyperparams.seasonsEnabled = $('#seasons-enabled').is(':checked');
             this.engine.env.seasons.reset();
+            if(Hyperparams.seasonsEnabled){
+                if(!Hyperparams.foodDecay) $("#food-decay").prop('checked',true).trigger('change');
+                if(!Hyperparams.soilFertility) $("#soil-fertility").prop('checked',true).trigger('change');
+            }
         }.bind(this));
         $('#season-mode').change(function() {
             Hyperparams.seasonMode = $('#season-mode').val();

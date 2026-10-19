@@ -11,6 +11,7 @@ const SerializeHelper = require('../Utils/SerializeHelper');
 const Species = require('../Stats/Species');
 const Seasons = require('./Seasons');
 const SeasonStats = require('../Stats/SeasonStats');
+const MIN_DECAY_RATE=0.25;
 
 class WorldEnvironment extends Environment{
     constructor(engine, cell_size) {
@@ -32,11 +33,13 @@ class WorldEnvironment extends Environment{
         this.seasons = new Seasons();
         this.food_queue=[]; // track food that transitions food -> decaying
         this.decay_queue=[]; // track decaying food that transitions decaying food -> empty cell + increase cell fertility
+        this.decay_clock=0; //clock changes according to season extending food life in winter.
         FossilRecord.setEnv(this);
     }
 
     update() {
         this.seasons.update(this.total_ticks);
+        this.decay_clock += this.decayRate();
         SeasonStats.update(this);
         var to_remove = [];
         for (var i in this.organisms) {
@@ -134,12 +137,12 @@ class WorldEnvironment extends Environment{
         if(state == CellStates.wall)
             this.walls.push(this.grid_map.cellAt(c, r));
         if(Hyperparams.foodDecay && state == CellStates.food){
-            cell.food_tick = this.total_ticks;
-            this.food_queue.push({cell: cell, tick: this.total_ticks});
+            cell.food_tick = this.decay_clock;
+            this.food_queue.push({cell: cell, tick: this.decay_clock});
         }
         if(Hyperparams.soilFertility && state == CellStates.decaying_food){
-            cell.decay_tick = this.total_ticks;
-            this.decay_queue.push({cell:cell,tick:this.total_ticks});
+            cell.decay_tick = this.decay_clock;
+            this.decay_queue.push({cell:cell,tick:this.decay_clock});
         }
             
     }
@@ -198,6 +201,7 @@ class WorldEnvironment extends Environment{
         this.renderer.renderFullGrid(this.grid_map.grid);
         this.total_mutability = 0;
         this.total_ticks = 0;
+        this.decay_clock=0;
         this.largest_cell_count = 0;
         this.seasons.reset();
         SeasonStats.reset();
@@ -303,7 +307,7 @@ class WorldEnvironment extends Environment{
             i++;
             continue;
         }
-        if(this.total_ticks-entry.tick < Hyperparams.foodDecayTicks){
+        if(this.decay_clock-entry.tick < Hyperparams.foodDecayTicks){
             break;
         }
 
@@ -320,8 +324,8 @@ class WorldEnvironment extends Environment{
         for(const col of this.grid_map.grid){
             for (const cell of col){
                 if (cell.state === CellStates.food){
-                    cell.food_tick = this.total_ticks;
-                    this.food_queue.push({cell: cell, tick: this.total_ticks});
+                    cell.food_tick = this.decay_clock;
+                    this.food_queue.push({cell: cell, tick: this.decay_clock});
                 }
             }
         }
@@ -336,7 +340,7 @@ class WorldEnvironment extends Environment{
             i++;
             continue;
         }
-        if(this.total_ticks-entry.tick < Hyperparams.decayToFertiliser){
+        if(this.decay_clock-entry.tick < Hyperparams.decayToFertiliser){
             break;
         }
         
@@ -354,8 +358,8 @@ class WorldEnvironment extends Environment{
         for(const col of this.grid_map.grid){
             for (const cell of col){
                 if (cell.state === CellStates.decaying_food){
-                    cell.decay_tick = this.total_ticks;
-                    this.decay_queue.push({cell: cell, tick: this.total_ticks});
+                    cell.decay_tick = this.decay_clock;
+                    this.decay_queue.push({cell: cell, tick: this.decay_clock});
                 }
             }
         }
@@ -367,6 +371,9 @@ class WorldEnvironment extends Environment{
                 cell.fertility = Hyperparams.baseFertility;
             }
         }
+    }
+    decayRate(){
+        return MIN_DECAY_RATE+(1-MIN_DECAY_RATE)*this.seasons.factor;
     }
 
 
