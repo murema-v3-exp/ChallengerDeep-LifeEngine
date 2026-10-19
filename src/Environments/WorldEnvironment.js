@@ -1,19 +1,18 @@
-const Environment = require('./Environment');
-const Renderer = require('../Rendering/Renderer');
-const GridMap = require('../Grid/GridMap');
-const Organism = require('../Organism/Organism');
-const CellStates = require('../Organism/Cell/CellStates');
-const EnvironmentController = require('../Controllers/EnvironmentController');
+const Environment = require('./Environment.js');
+const Renderer = require('../Rendering/Renderer.js');
+const GridMap = require('../Grid/GridMap.js');
+const Organism = require('../Organism/Organism.js');
+const CellStates = require('../Organism/Cell/CellStates.js');
+const EnvironmentController = require('../Controllers/EnvironmentController.js');
 const Hyperparams = require('../Hyperparameters.js');
-const FossilRecord = require('../Stats/FossilRecord');
-const WorldConfig = require('../WorldConfig');
-const SerializeHelper = require('../Utils/SerializeHelper');
-const Species = require('../Stats/Species');
+const FossilRecord = require('../Stats/FossilRecord.js');
+const WorldConfig = require('../WorldConfig.js');
+const SerializeHelper = require('../Utils/SerializeHelper.js');
+const Species = require('../Stats/Species.js');
 
 class WorldEnvironment extends Environment{
-    constructor(engine, cell_size) {
+    constructor(cell_size) {
         super();
-        this.engine = engine;
         this.renderer = new Renderer('env-canvas', 'env', cell_size);
         this.controller = new EnvironmentController(this, this.renderer.canvas);
         this.num_rows = Math.ceil(this.renderer.height / cell_size);
@@ -156,23 +155,15 @@ class WorldEnvironment extends Environment{
     reset(confirm_reset=true, reset_life=true) {
         if (confirm_reset && !confirm('The current environment will be lost. Proceed?'))
             return false;
-        let restart = false;
-        if (this.engine.running) {
-            this.engine.last_fps = this.engine.fps;
-            this.engine.stop();
-            restart = true;
-        }
+
         this.organisms = [];
         this.grid_map.fillGrid(CellStates.empty, !WorldConfig.clear_walls_on_reset);
         this.renderer.renderFullGrid(this.grid_map.grid);
         this.total_mutability = 0;
         this.total_ticks = 0;
-        this.largest_cell_count = 0;
         FossilRecord.clear_record();
         if (reset_life)
             this.OriginOfLife();
-        if (restart)
-            this.engine.start(this.engine.last_fps);
         return true;
     }
 
@@ -215,6 +206,7 @@ class WorldEnvironment extends Environment{
 
         // create species map
         let species = {};
+
         for (let name in env.fossil_record.species) {
             let s = new Species(null, null, 0);
             SerializeHelper.overwriteNonObjects(env.fossil_record.species[name], s)
@@ -237,6 +229,9 @@ class WorldEnvironment extends Environment{
             }
             s.name = orgRaw.species_name;
             org.species = s;
+            if (org.seed){
+                org.seed.species = s;
+            }
         }
         for (let name in species)
             FossilRecord.addSpeciesObj(species[name]);

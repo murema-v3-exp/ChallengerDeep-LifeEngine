@@ -14,6 +14,7 @@ class Anatomy {
         this.is_producer = false;
         this.is_mover = false;
         this.has_eyes = false;
+        this.has_seed = false;
     }
 
     canAddCellAt(c, r) {
@@ -28,14 +29,15 @@ class Anatomy {
     addDefaultCell(state, c, r) {
         var new_cell = BodyCellFactory.createDefault(this.owner, state, c, r);
         this.cells.push(new_cell);
-        this.owner.brain.checkAddedCell(new_cell);
         return new_cell;
     }
 
     addRandomizedCell(state, c, r) {
+        if (state==CellStates.eye && !this.has_eyes) {
+            this.owner.brain.randomizeDecisions();
+        }
         var new_cell = BodyCellFactory.createRandom(this.owner, state, c, r);
         this.cells.push(new_cell);
-        this.owner.brain.checkAddedCell(new_cell);
         return new_cell;
     }
 
@@ -61,7 +63,6 @@ class Anatomy {
         for (var i=0; i<this.cells.length; i++) {
             var cell = this.cells[i];
             if (cell.loc_col == c && cell.loc_row == r){
-                this.owner.brain.checkRemovedCell(cell);
                 this.cells.splice(i, 1);
                 break;
             }
@@ -83,6 +84,7 @@ class Anatomy {
         this.is_producer = false;
         this.is_mover = false;
         this.has_eyes = false;
+        this.has_seed = false;
         for (var cell of this.cells) {
             if (cell.state == CellStates.producer)
                 this.is_producer = true;
@@ -90,6 +92,8 @@ class Anatomy {
                 this.is_mover = true;
             if (cell.state == CellStates.eye)
                 this.has_eyes = true;
+            if (cell.state == CellStates.seed)
+                this.has_seed = true;
         }
     }
 

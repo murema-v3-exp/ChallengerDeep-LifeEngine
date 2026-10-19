@@ -7,14 +7,13 @@ const Hyperparams = {
         this.killableNeighbors = Neighbors.adjacent;
         this.edibleNeighbors = Neighbors.adjacent;
         this.growableNeighbors = Neighbors.adjacent;
+        this.dormancy = 200;
 
         this.useGlobalMutability = false;
         this.globalMutability = 5;
-        this.addProb = 25;
-        this.changeProb = 25;
-        this.removeProb = 25;
-        this.brainMutationChance = 25;
-        this.mutationSymmetryChance = 10;
+        this.addProb = 33;
+        this.changeProb = 33;
+        this.removeProb = 33;
         
         this.rotationEnabled = true;
 
@@ -22,17 +21,17 @@ const Hyperparams = {
         this.moversCanProduce = false;
 
         this.instaKill = false;
-        this.dontKillSameSpecies = false;
 
-        this.lookRange = 30;
+        this.lookRange = 20;
         this.seeThroughSelf = false;
-        this.evolveIndependentEyeDecisions = true;
 
         this.foodDropProb = 0;
 
         this.extraMoverFoodCost = 0;
 
         this.maxOrganisms = -1;
+
+        this.has_seed=false //This hyperparameter is used to check if organisms have appropriate cell behaviour
     },
 
     loadJsonObj(obj) {

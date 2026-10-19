@@ -9,20 +9,22 @@ const SerializeHelper = require("../Utils/SerializeHelper");
 
 class Organism {
     constructor(col, row, env, parent=null) {
-        this.c = col;
-        this.r = row;
-        this.env = env;
+        this.c = col;//Column position of cell
+        this.r = row;//Row position of cell
+        this.env = env;//
         this.lifetime = 0;
         this.food_collected = 0;
         this.living = true;
         this.anatomy = new Anatomy(this)
         this.direction = Directions.down; // direction of movement
         this.rotation = Directions.up; // direction of rotation
+        this.can_rotate = Hyperparams.rotationEnabled;
         this.move_count = 0;
         this.move_range = 4;
         this.ignore_brain_for = 0;
         this.mutability = 5;
         this.damage = 0;
+        this.seed= null;
         this.brain = new Brain(this);
         if (parent != null) {
             this.inherit(parent);
@@ -37,7 +39,9 @@ class Organism {
             //deep copy parent cells
             this.anatomy.addInheritCell(c);
         }
-        this.brain.copy(parent.brain);
+        if(parent.anatomy.is_mover && parent.anatomy.has_eyes) {
+            this.brain.copy(parent.brain);
+        }
     }
 
     // amount of food required before it can reproduce
@@ -56,6 +60,7 @@ class Organism {
     reproduce() {
         //produce mutated child
         //check nearby locations (is there room and a direct path)
+
         var org = new Organism(0, 0, this.env, this);
         if(Hyperparams.rotationEnabled){
             org.rotation = Directions.getRandomDirection();
@@ -75,8 +80,20 @@ class Organism {
             }
         } 
         var mutated = false;
-        if (this.calcRandomChance(prob)) {
-            mutated = org.mutate();
+        if (Math.random() * 100 <= prob) {
+            if (org.anatomy.is_mover && Math.random() * 100 <= 10) { 
+                if (org.anatomy.has_eyes) {
+                    org.brain.mutate();
+                }
+                org.move_range += Math.floor(Math.random() * 4) - 2;
+                if (org.move_range <= 0){
+                    org.move_range = 1;
+                };
+                
+            }
+            else {
+                mutated = org.mutate();
+            }
         }
 
         var direction = Directions.getRandomScalar();
@@ -87,7 +104,9 @@ class Organism {
         var new_c = this.c + (direction_c*basemovement) + (direction_c*offset);
         var new_r = this.r + (direction_r*basemovement) + (direction_r*offset);
 
-        if (org.isClear(new_c, new_r, org.rotation, true) && 
+        if (this.anatomy.has_seed){
+                this.seeder(org, new_c, new_r, mutated);
+        } else if (org.isClear(new_c, new_r, org.rotation, true) && 
             org.isStraightPath(new_c, new_r, this.c, this.r, this) && 
             this.env.canAddOrganism())
         {
@@ -111,45 +130,13 @@ class Organism {
         let removed = false;
         if (this.calcRandomChance(Hyperparams.addProb)) {
             let branch = this.anatomy.getRandomCell();
-            let state = CellStates.getRandomLivingType(); // branch.state;
-            let growth_direction = Neighbors.all[Math.floor(Math.random() * Neighbors.all.length)];
-            let c = branch.loc_col + growth_direction[0];
-            let r = branch.loc_row + growth_direction[1];
-            if (this.anatomy.canAddCellAt(c, r)) {
+            let state = CellStates.getRandomLivingType();//branch.state;
+            let growth_direction = Neighbors.all[Math.floor(Math.random() * Neighbors.all.length)]
+            let c = branch.loc_col+growth_direction[0];
+            let r = branch.loc_row+growth_direction[1];
+            if (this.anatomy.canAddCellAt(c, r)){
                 added = true;
                 this.anatomy.addRandomizedCell(state, c, r);
-
-                // attempt symmetrical mutations across horizontal, vertical, and both diagonal axes
-                const axes = ['h', 'v', 'd'];
-                for (let axis of axes) {
-                    if (this.calcRandomChance(Hyperparams.mutationSymmetryChance)) {
-                        let mc = c;
-                        let mr = r;
-                        switch (axis) {
-                            case 'h': // horizontal symmetry (mirror over x-axis)
-                                mr = -r;
-                                if (r === 0) {
-                                    mr = c;
-                                    mc = -r;
-                                }
-                                break;
-                            case 'v': // vertical symmetry (mirror over y-axis)
-                                mc = -c;
-                                if (c === 0) {
-                                    mr = -c;
-                                    mc = r;
-                                }
-                                break;
-                            case 'd': // diagonal symmetry (mirror over both axes)
-                                mc = -c;
-                                mr = -r;
-                                break;
-                        }
-                        if (this.anatomy.canAddCellAt(mc, mr)) {
-                            this.anatomy.addRandomizedCell(state, mc, mr);
-                        }
-                    }
-                }
             }
         }
         if (this.calcRandomChance(Hyperparams.changeProb)){
@@ -164,16 +151,6 @@ class Organism {
                 removed = this.anatomy.removeCell(cell.loc_col, cell.loc_row);
             }
         }
-        if (this.anatomy.is_mover && this.calcRandomChance(Hyperparams.brainMutationChance)) { 
-            if (this.anatomy.has_eyes) {
-                this.brain.mutate();
-            }
-            this.move_range += Math.floor(Math.random() * 4) - 2;
-            if (this.move_range <= 0){
-                this.move_range = 1;
-            };
-        }
-        // return true if a new species is created, which is only true for anatomy changes, not brain changes
         return added || changed || removed;
     }
 
@@ -201,22 +178,20 @@ class Organism {
         return false;
     }
 
-    attemptRotate(rotation=null) {
-        if(!Hyperparams.rotationEnabled){
+    attemptRotate() {
+        if(!this.can_rotate){
             this.direction = Directions.getRandomDirection();
             this.move_count = 0;
             return true;
         }
-        if(rotation == null){
-            rotation = Directions.getRandomDirection();
-        }
-        if(this.isClear(this.c, this.r, rotation)){
+        var new_rotation = Directions.getRandomDirection();
+        if(this.isClear(this.c, this.r, new_rotation)){
             for (var cell of this.anatomy.cells) {
                 var real_c = this.c + cell.rotatedCol(this.rotation);
                 var real_r = this.r + cell.rotatedRow(this.rotation);
                 this.env.changeCell(real_c, real_r, CellStates.empty, null);
             }
-            this.rotation = rotation;
+            this.rotation = new_rotation;
             this.direction = Directions.getRandomDirection();
             this.updateGrid();
             this.move_count = 0;
@@ -225,6 +200,8 @@ class Organism {
         return false;
     }
 
+
+    
     changeDirection(dir) {
         this.direction = dir;
         this.move_count = 0;
@@ -280,6 +257,8 @@ class Organism {
         return true;
     }
 
+    
+
     harm() {
         this.damage++;
         if (this.damage >= this.maxHealth() || Hyperparams.instaKill) {
@@ -307,6 +286,9 @@ class Organism {
 
     update() {
         this.lifetime++;
+        if (this.seed){
+            return this.updateSeed()
+        }
         if (this.lifetime > this.lifespan()) {
             this.die();
             return this.living;
@@ -321,64 +303,66 @@ class Organism {
         }
         
         if (this.anatomy.is_mover) {
-            const Decision = Brain.Decision;
-            let brain_decision = Decision.neutral;
-            let brain_direction = 0;
-            if (this.anatomy.has_eyes) {
-                let {decision, move_direction} = this.brain.decide();
-                brain_decision = decision;
-                brain_direction = move_direction;
+            this.move_count++;
+            var changed_dir = false;
+            if (this.ignore_brain_for == 0){
+                changed_dir = this.brain.decide();
+            }  
+            else{
+                this.ignore_brain_for --;
             }
-            let dontmove = false;
-            switch (brain_decision) {
-                case Decision.neutral:
-                    // move move_range times, then randomly rotate/change direction
-                    if (this.move_count > this.move_range) {
-                        this.attemptRotate();
-                        this.changeDirection(Directions.getRandomDirection());
-                        this.move_count = 0;
-                    }
-                    break;
-                case Decision.chase:
-                    this.changeDirection(brain_direction);
-                    break;
-                case Decision.retreat:
-                    this.changeDirection(Directions.getOppositeDirection(brain_direction));
-                    break;
-                case Decision.move_left:
-                    this.changeDirection(Directions.getLeftDirection(brain_direction));
-                    break;
-                case Decision.move_right:
-                    this.changeDirection(Directions.getRightDirection(brain_direction));
-                    break;
-                case Decision.turn_left:
-                    // rotate left based on current rotation, brain direction irrelavent
-                    this.attemptRotate(Directions.getLeftDirection(this.rotation));
-                    dontmove = true;
-                    break;
-                case Decision.turn_right:
-                    this.attemptRotate(Directions.getRightDirection(this.rotation));
-                    dontmove = true;
-                    break;
-                case Decision.stop:
-                    dontmove = true;
-                    break;
-            }
-            if (!dontmove) {
-                let moved = this.attemptMove();
-                if (!moved) {
-                    // if stuck, try to rotate or change direction
-                    let rotated = this.attemptRotate();
-                    if (!rotated) {
-                        this.changeDirection(Directions.getRandomDirection());
-                    }
-                }
-                else {
-                    this.move_count++;
+            var moved = this.attemptMove();
+            if ((this.move_count > this.move_range && !changed_dir) || !moved){
+                var rotated = this.attemptRotate();
+                if (!rotated) {
+                    this.changeDirection(Directions.getRandomDirection());
+                    if (changed_dir)
+                        this.ignore_brain_for = this.move_range + 1;
                 }
             }
         }
         return this.living;
+    }
+
+    seeder(child, c, r, mutated){
+
+        var seed = new Organism(c,r,this.env);
+        seed.mutability = child.mutability;
+        seed.anatomy.addDefaultCell(CellStates.seed,0,0);
+
+        //Adds mutated seed to fossil record
+        if (!seed.isClear(c, r) || !seed.isStraightPath(c, r, this.c, this.r, this) || !this.env.canAddOrganism())
+            return;
+        if (mutated){
+            FossilRecord.addSpecies(child,this.species);
+        }else{
+            child.species.addPop();
+        }
+        seed.seed = child;
+        seed.species = child.species;
+        this.env.addOrganism(seed);
+    }
+
+    updateSeed(){
+
+        var hibernation = 2//How long a seed can stay in active 
+        //if (this.anatomy.lifespan>Hyperparams.)
+        if (this.lifetime < Hyperparams.dormancy){
+            return this.living;
+        }
+        
+        this.env.changeCell(this.c, this.r, CellStates.empty, null);
+        if (this.seed.isClear(this.c, this.r)){
+            this.seed.c = this.c;
+            this.seed.r = this.r;
+            this.env.addOrganism(this.seed);
+            this.living = false;
+            return false;
+        }
+        this.updateGrid();
+        if (this.lifetime > hibernation*Hyperparams.dormancy){
+            this.die()//The seed eventually dies off it remains unable to turn into an organism for to long
+        } return this.living 
     }
 
     getRealCell(local_cell, c=this.c, r=this.r, rotation=this.rotation){
@@ -412,6 +396,9 @@ class Organism {
         org.anatomy = this.anatomy.serialize();
         if (this.anatomy.is_mover && this.anatomy.has_eyes)
             org.brain = this.brain.serialize();
+        if (this.seed){
+            org.seed = this.seed.serialize();
+        }
         org.species_name = this.species.name;
         return org;
     }
@@ -419,6 +406,10 @@ class Organism {
     loadRaw(org) {
         SerializeHelper.overwriteNonObjects(org, this);
         this.anatomy.loadRaw(org.anatomy)
+        if (org.seed){
+            this.seed = new Organism(0,0,this.env);
+            this.seed.loadRaw(org.seed)
+        }
         if (org.brain)
             this.brain.copy(org.brain)
     }

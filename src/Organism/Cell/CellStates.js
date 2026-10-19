@@ -59,7 +59,7 @@ class Eye extends CellState {
     render(ctx, cell, size) {
         ctx.fillStyle = this.color;
         ctx.fillRect(cell.x, cell.y, size, size);
-        if(size <= 1)
+        if(size == 1)
             return;
         var half = size/2;
         var x = -(size)/8
@@ -74,6 +74,12 @@ class Eye extends CellState {
     }
 }
 
+class Seed extends CellState{
+    constructor(){
+        super('seed')
+    }
+}
+
 const CellStates = {
     empty: new Empty(),
     food: new Food(),
@@ -84,9 +90,10 @@ const CellStates = {
     killer: new Killer(),
     armor: new Armor(),
     eye: new Eye(),
+    seed: new Seed(),
     defineLists() {
-        this.all = [this.empty, this.food, this.wall, this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye]
-        this.living = [this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye];
+        this.all = [this.empty, this.food, this.wall, this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye,this.seed]
+        this.living = [this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye,this.seed];
     },
     getRandomName: function() {
         return this.all[Math.floor(Math.random() * this.all.length)].name;
