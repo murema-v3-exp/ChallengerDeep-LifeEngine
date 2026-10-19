@@ -22,8 +22,8 @@ class ProducerCell extends BodyCell{
             if (cell == null || cell.state != CellStates.empty)return;
         if(Hyperparams.soilFertility){
                     //if(cell.fertility<Hyperparams.fertilityUsedPerFoodProduced) return; // prevents generating food if fertility is less than 1
-                    //prob = prob+(prob * (cell.fertility / Hyperparams.maxFertility));
-                    prob = prob*(0.5 +1.5* (cell.fertility / Hyperparams.maxFertility));
+                    prob = prob+(prob * (cell.fertility / Hyperparams.maxFertility));
+                    //prob = prob*(0.5 +1.5* (cell.fertility / Hyperparams.maxFertility));
 
                 }
         if (Math.random() * 100 <= prob) {
