@@ -339,6 +339,20 @@ class ControlPanel {
         $('#food-prod-prob').change(function() {
             Hyperparams.foodProdProb = $('#food-prod-prob').val();
         }.bind(this));
+        $('#seasons-enabled').change(function() {
+            Hyperparams.seasonsEnabled = $('#seasons-enabled').is(':checked');
+            this.engine.env.seasons.reset();
+        }.bind(this));
+        $('#season-mode').change(function() {
+            Hyperparams.seasonMode = $('#season-mode').val();
+            this.engine.env.seasons.reset();
+        }.bind(this));
+        $('#season-length').change(function() {
+            Hyperparams.seasonLength = Math.max(100, parseInt($('#season-length').val()) || 4000);
+        }.bind(this));
+        $('#winter-severity').change(function() {
+            Hyperparams.winterSeverity = parseFloat($('#winter-severity').val()) || 0;
+        }.bind(this));
         $('#lifespan-multiplier').change(function() {
             Hyperparams.lifespanMultiplier = $('#lifespan-multiplier').val();
         }.bind(this));
@@ -452,6 +466,10 @@ class ControlPanel {
     updateHyperparamUIValues(){
         $('#food-prod-prob').val(Hyperparams.foodProdProb);
         $('#lifespan-multiplier').val(Hyperparams.lifespanMultiplier);
+        $('#seasons-enabled').prop('checked', Hyperparams.seasonsEnabled);
+        $('#season-mode').val(Hyperparams.seasonMode);
+        $('#season-length').val(Hyperparams.seasonLength);
+        $('#winter-severity').val(Hyperparams.winterSeverity);
         $('#rot-enabled').prop('checked', Hyperparams.rotationEnabled);
         $('#insta-kill').prop('checked', Hyperparams.instaKill);
         $('#evolved-mutation').prop('checked', !Hyperparams.useGlobalMutability);

@@ -30,6 +30,7 @@
 				<input id="slider" type="range" min="1" max="100" value="25">
 				<p id='fps'>Target FPS: 60</p>
 				<p id='fps-actual'></p>
+				<p id='season-display'>Season: Off</p>
 				<button id='reset-env' title='Restarts simulation with default organism.'>Reset</button>
 				<button id='clear-env' title="Removes all organisms.">Clear</button>
 				<div id="brush-size-container">
@@ -204,6 +205,22 @@
 						<br>
 						<label for="dont-kill-same-species" title='When on, killer cells will not harm organisms of the same species.'>Don't kill same species</label>
 						<input type="checkbox" id="dont-kill-same-species">
+						<br>
+						<h4>Seasons</h4>
+						<label for="seasons-enabled" title='Food production rises and falls in a summer/winter cycle.'>Enable seasons</label>
+						<input type="checkbox" id="seasons-enabled">
+						<br>
+						<label for="season-mode" title='Regular: every year is the same. Random: each season has a random length and harshness.'>Season mode:</label>
+						<select id="season-mode">
+							<option value="regular">Regular</option>
+							<option value="random">Random</option>
+						</select>
+						<br>
+						<label for="season-length" title='Ticks for one full year (summer to winter and back).'>Year length (ticks):</label>
+						<input type="number" id="season-length" min="100" max="1000000" value=4000 step="100">
+						<br>
+						<label for="winter-severity" title='How much food production drops in deep winter. 0 = no change, 1 = no food.'>Winter severity (0-1):</label>
+						<input type="number" id="winter-severity" min="0" max="1" value=0.8 step="0.05">
 
 						
 					</div>
@@ -256,6 +273,10 @@
 						<p id='diversity'>Species Diversity (Shannon): </p>
 						<p id='extinct-count'>Extinct Species Recorded: </p>
 						<p id='food-count'>Food Cells: </p>
+						<h3>Summer vs Winter</h3>
+						<div id='season-stats'><p>Turn on seasons to collect summer vs winter stats.</p></div>
+						<button id='download-season-stats' title='Download one row per summer/winter period as a CSV file'>Download season stats (CSV)</button>
+						<br>
 						<label for="chart-option">Chart: </label>
 						<select name="chart-option" id="chart-option">
 							<option value="population">Population</option>
@@ -271,6 +292,7 @@
 							<option value="food">Food &amp; Trophic Structure</option>
 							<option value="life-history">Organism Life History</option>
 							<option value="life-history-success">Reproduction vs. Success</option>
+							<option value="seasonal">Summer vs Winter</option>
 						</select>
 						<p id='chart-note'></p>
 					</div>

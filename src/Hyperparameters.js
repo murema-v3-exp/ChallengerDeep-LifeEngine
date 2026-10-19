@@ -33,6 +33,12 @@ const Hyperparams = {
         this.extraMoverFoodCost = 0;
 
         this.maxOrganisms = -1;
+
+        // Seasons
+        this.seasonsEnabled = false;
+        this.seasonMode = 'regular';   // 'regular' or 'random'
+        this.seasonLength = 4000;      // ticks for one full summer to winter to summer cycle
+        this.winterSeverity = 0.8;     // 0 = no change, 1 = no food at all in deep winter
     },
 
     loadJsonObj(obj) {

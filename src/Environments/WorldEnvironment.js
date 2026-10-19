@@ -9,6 +9,8 @@ const FossilRecord = require('../Stats/FossilRecord');
 const WorldConfig = require('../WorldConfig');
 const SerializeHelper = require('../Utils/SerializeHelper');
 const Species = require('../Stats/Species');
+const Seasons = require('./Seasons');
+const SeasonStats = require('../Stats/SeasonStats');
 
 class WorldEnvironment extends Environment{
     constructor(engine, cell_size) {
@@ -26,10 +28,13 @@ class WorldEnvironment extends Environment{
         this.reset_count = 0;
         this.total_ticks = 0;
         this.data_update_rate = 100;
+        this.seasons = new Seasons();
         FossilRecord.setEnv(this);
     }
 
     update() {
+        this.seasons.update(this.total_ticks);
+        SeasonStats.update(this);
         var to_remove = [];
         for (var i in this.organisms) {
             var org = this.organisms[i];
@@ -44,7 +49,14 @@ class WorldEnvironment extends Environment{
         this.total_ticks ++;
         if (this.total_ticks % this.data_update_rate == 0) {
             FossilRecord.updateData();
+            this.updateSeasonDisplay();
         }
+    }
+
+    updateSeasonDisplay() {
+        if (WorldConfig.headless && this.total_ticks % 1000 != 0) return;
+        let pct = Math.round(this.seasons.factor * 100);
+        $('#season-display').text('Season: ' + this.seasons.name() + ' (food ' + pct + '%)');
     }
 
     render() {
@@ -140,7 +152,7 @@ class WorldEnvironment extends Environment{
 
     generateFood() {
         var num_food = Math.max(Math.floor(this.grid_map.cols*this.grid_map.rows*Hyperparams.foodDropProb/50000), 1)
-        var prob = Hyperparams.foodDropProb;
+        var prob = Hyperparams.foodDropProb * this.seasons.factor;
         for (var i=0; i<num_food; i++) {
             if (Math.random() <= prob){
                 var c=Math.floor(Math.random() * this.grid_map.cols);
@@ -168,6 +180,8 @@ class WorldEnvironment extends Environment{
         this.total_mutability = 0;
         this.total_ticks = 0;
         this.largest_cell_count = 0;
+        this.seasons.reset();
+        SeasonStats.reset();
         FossilRecord.clear_record();
         if (reset_life)
             this.OriginOfLife();
@@ -205,6 +219,7 @@ class WorldEnvironment extends Environment{
 
     loadRaw(env) { // species name->stats map, evolution controls, 
         this.organisms = [];
+        SeasonStats.reset(); // season stats are not saved with worlds
         FossilRecord.clear_record();
         let cell_size = env.grid.cell_size ? env.grid.cell_size : this.grid_map.cell_size;
         this.resizeGridColRow(cell_size, env.grid.cols, env.grid.rows)

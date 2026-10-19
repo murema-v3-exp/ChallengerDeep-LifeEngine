@@ -1,6 +1,7 @@
 const CellStates = require("../Organism/Cell/CellStates");
 const SerializeHelper = require("../Utils/SerializeHelper");
 const Species = require("./Species");
+const SeasonStats = require("./SeasonStats");
 
 // parallel arrays sampled every data update, and the value used to pad saves that predate them
 const RECORD_KEYS = {
@@ -24,6 +25,7 @@ const RECORD_KEYS = {
     cell_shares: {},            // % of all living cells of each type
     av_death_ages: null,        // avg age of organisms that died since the last sample
     av_offspring: null,         // avg offspring of organisms that died since the last sample
+    season_factors: null,       // food production as % of normal (100 = summer / seasons off)
 };
 
 const FossilRecord = {
@@ -53,6 +55,7 @@ const FossilRecord = {
         this.extant_species[new_species.name] = new_species;
         org.species = new_species;
         this.interval_speciations++;
+        SeasonStats.recordSpeciation();
         return new_species;
     },
 
@@ -88,6 +91,7 @@ const FossilRecord = {
         species.ancestor = undefined; // garbage collect ancestors
         delete this.extant_species[species.name];
         this.interval_extinctions++;
+        SeasonStats.recordExtinction(species.cumulative_pop >= this.min_discard);
         if (species.cumulative_pop >= this.min_discard) {
             // store a lightweight summary rather than the species (and its anatomy)
             this.extinct_species.delete(species.name);
@@ -109,10 +113,12 @@ const FossilRecord = {
 
     recordBirth() {
         this.interval_births++;
+        SeasonStats.recordBirth();
     },
 
     recordDeath(org) {
         this.interval_deaths++;
+        SeasonStats.recordDeath();
         this.interval_death_age_sum += org.lifetime;
         this.interval_offspring_sum += org.num_offspring;
     },
@@ -146,6 +152,7 @@ const FossilRecord = {
         this.recordDiversity();
         this.recordDominantSpecies(tick);
         this.recordFoodAndCellShares();
+        this.season_factors.push(this.env.seasons ? Math.round(this.env.seasons.factor * 100) : 100);
         while (this.tick_record.length > this.record_size_limit) {
             for (let key in RECORD_KEYS)
                 this[key].shift();
