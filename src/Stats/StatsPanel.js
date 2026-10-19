@@ -1,12 +1,11 @@
 const PopulationChart = require("./Charts/PopulationChart");
 const SpeciesChart = require("./Charts/SpeciesChart");
 const MutationChart = require("./Charts/MutationChart");
-const MetabolismChart = require("./Charts/MetabolismChart");
 const CellsChart = require("./Charts/CellsChart");
 const FossilRecord = require("./FossilRecord");
 
 
-const ChartSelections = [PopulationChart, SpeciesChart, CellsChart, MutationChart, MetabolismChart];
+const ChartSelections = [PopulationChart, SpeciesChart, CellsChart, MutationChart];
 
 class StatsPanel {
     constructor(env) {
@@ -59,14 +58,6 @@ class StatsPanel {
             $('#top-species').text("Most Populous Species: None");
         $('#largest-org').text("Largest Organism Ever: " + this.env.largest_cell_count + " cells");
         $('#avg-mut').text("Average Mutation Rate: " + Math.round(this.env.averageMutability() * 100) / 100);
-        let metabolism = FossilRecord.metabolism_stats[FossilRecord.metabolism_stats.length - 1];
-        if (!metabolism)
-            metabolism = FossilRecord.calcMetabolismStats();
-        $('#metabolism-stats').text(
-            "Mover Metabolism — Mean: " + metabolism.mean.toFixed(3) +
-            ", Min: " + metabolism.min.toFixed(3) +
-            ", Max: " + metabolism.max.toFixed(3)
-        );
     }
 
     reset() {

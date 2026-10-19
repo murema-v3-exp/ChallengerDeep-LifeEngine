@@ -20,8 +20,7 @@ class Organism {
         this.rotation = Directions.up; // direction of rotation
         this.move_count = 0;
         this.move_range = 4;
-        this.metabolism = this.clampMetabolism(Hyperparams.defaultMetabolism);
-        this.movement_credit = 0;
+        this.appetite = this.clampAppetite(Hyperparams.defaultAppetite);
         this.ignore_brain_for = 0;
         this.mutability = 5;
         this.damage = 0;
@@ -33,7 +32,7 @@ class Organism {
 
     inherit(parent) {
         this.move_range = parent.move_range;
-        this.metabolism = this.clampMetabolism(parent.metabolism);
+        this.appetite = this.clampAppetite(parent.appetite);
         this.mutability = parent.mutability;
         this.species = parent.species;
         for (var c of parent.anatomy.cells){
@@ -77,9 +76,10 @@ class Organism {
                     org.mutability = 1;
             }
         } 
-        if (org.anatomy.is_mover && this.calcRandomChance(Hyperparams.metabolismMutationRate)) {
-            let metabolism_change = (Math.random() * 2 - 1) * Hyperparams.metabolismMutationStep;
-            org.metabolism = org.clampMetabolism(org.metabolism + metabolism_change);
+        if (Hyperparams.appetiteMutationRate > 0 && !org.anatomy.is_producer &&
+            this.calcRandomChance(Hyperparams.appetiteMutationRate)) {
+            const change = (Math.random() * 2 - 1) * Hyperparams.appetiteMutationStep;
+            org.appetite = org.clampAppetite(org.appetite + change);
         }
         var mutated = false;
         if (this.calcRandomChance(prob)) {
@@ -188,10 +188,10 @@ class Organism {
         return (Math.random() * 100) < prob;
     }
 
-    clampMetabolism(metabolism) {
-        if (!Number.isFinite(metabolism))
-            return Hyperparams.defaultMetabolism;
-        return Math.min(Hyperparams.maxMetabolism, Math.max(Hyperparams.minMetabolism, metabolism));
+    clampAppetite(appetite) {
+        if (!Number.isFinite(appetite))
+            return 1;
+        return Math.min(Hyperparams.maxAppetite, Math.max(Hyperparams.minAppetite, appetite));
     }
 
     attemptMove() {
@@ -324,12 +324,6 @@ class Organism {
             this.die();
             return this.living;
         }
-        if (this.anatomy.is_mover) {
-            this.food_collected = Math.max(
-                this.food_collected - this.metabolism * Hyperparams.metabolismFoodCost,
-                0
-            );
-        }
         if (this.food_collected >= this.foodNeeded()) {
             this.reproduce();
         }
@@ -340,72 +334,64 @@ class Organism {
         }
         
         if (this.anatomy.is_mover) {
-            this.movement_credit += this.metabolism;
-            while (this.movement_credit >= 1) {
-                this.movement_credit--;
-                this.performMovement();
+            const Decision = Brain.Decision;
+            let brain_decision = Decision.neutral;
+            let brain_direction = 0;
+            if (this.anatomy.has_eyes) {
+                let {decision, move_direction} = this.brain.decide();
+                brain_decision = decision;
+                brain_direction = move_direction;
+            }
+            let dontmove = false;
+            switch (brain_decision) {
+                case Decision.neutral:
+                    // move move_range times, then randomly rotate/change direction
+                    if (this.move_count > this.move_range) {
+                        this.attemptRotate();
+                        this.changeDirection(Directions.getRandomDirection());
+                        this.move_count = 0;
+                    }
+                    break;
+                case Decision.chase:
+                    this.changeDirection(brain_direction);
+                    break;
+                case Decision.retreat:
+                    this.changeDirection(Directions.getOppositeDirection(brain_direction));
+                    break;
+                case Decision.move_left:
+                    this.changeDirection(Directions.getLeftDirection(brain_direction));
+                    break;
+                case Decision.move_right:
+                    this.changeDirection(Directions.getRightDirection(brain_direction));
+                    break;
+                case Decision.turn_left:
+                    // rotate left based on current rotation, brain direction irrelavent
+                    this.attemptRotate(Directions.getLeftDirection(this.rotation));
+                    dontmove = true;
+                    break;
+                case Decision.turn_right:
+                    this.attemptRotate(Directions.getRightDirection(this.rotation));
+                    dontmove = true;
+                    break;
+                case Decision.stop:
+                    dontmove = true;
+                    break;
+            }
+            if (!dontmove) {
+                let moved = this.attemptMove();
+                if (!moved) {
+                    // if stuck, try to rotate or change direction
+                    let rotated = this.attemptRotate();
+                    if (!rotated) {
+                        this.changeDirection(Directions.getRandomDirection());
+                    }
+                }
+                else {
+                    this.move_count++;
+                }
             }
         }
         return this.living;
-    }
-
-    performMovement() {
-        const Decision = Brain.Decision;
-        let brain_decision = Decision.neutral;
-        let brain_direction = 0;
-        if (this.anatomy.has_eyes) {
-            let {decision, move_direction} = this.brain.decide();
-            brain_decision = decision;
-            brain_direction = move_direction;
-        }
-        let dontmove = false;
-        switch (brain_decision) {
-            case Decision.neutral:
-                // move move_range times, then randomly rotate/change direction
-                if (this.move_count > this.move_range) {
-                    this.attemptRotate();
-                    this.changeDirection(Directions.getRandomDirection());
-                    this.move_count = 0;
-                }
-                break;
-            case Decision.chase:
-                this.changeDirection(brain_direction);
-                break;
-            case Decision.retreat:
-                this.changeDirection(Directions.getOppositeDirection(brain_direction));
-                break;
-            case Decision.move_left:
-                this.changeDirection(Directions.getLeftDirection(brain_direction));
-                break;
-            case Decision.move_right:
-                this.changeDirection(Directions.getRightDirection(brain_direction));
-                break;
-            case Decision.turn_left:
-                // rotate left based on current rotation, brain direction irrelavent
-                this.attemptRotate(Directions.getLeftDirection(this.rotation));
-                dontmove = true;
-                break;
-            case Decision.turn_right:
-                this.attemptRotate(Directions.getRightDirection(this.rotation));
-                dontmove = true;
-                break;
-            case Decision.stop:
-                dontmove = true;
-                break;
-        }
-        if (!dontmove) {
-            let moved = this.attemptMove();
-            if (!moved) {
-                // if stuck, try to rotate or change direction
-                let rotated = this.attemptRotate();
-                if (!rotated) {
-                    this.changeDirection(Directions.getRandomDirection());
-                }
-            }
-            else {
-                this.move_count++;
-            }
-        }
     }
 
     getRealCell(local_cell, c=this.c, r=this.r, rotation=this.rotation){
@@ -445,8 +431,7 @@ class Organism {
 
     loadRaw(org) {
         SerializeHelper.overwriteNonObjects(org, this);
-        this.metabolism = this.clampMetabolism(this.metabolism);
-        this.movement_credit = Number.isFinite(this.movement_credit) ? this.movement_credit : 0;
+        this.appetite = this.clampAppetite(org.appetite);
         this.anatomy.loadRaw(org.anatomy)
         if (org.brain)
             this.brain.copy(org.brain)

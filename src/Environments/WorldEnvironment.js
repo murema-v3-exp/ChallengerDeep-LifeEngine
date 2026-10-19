@@ -204,6 +204,9 @@ class WorldEnvironment extends Environment{
     }
 
     loadRaw(env) { // species name->stats map, evolution controls, 
+        if ($('#override-controls').is(':checked')) {
+            Hyperparams.loadJsonObj(env.controls || {});
+        }
         this.organisms = [];
         FossilRecord.clear_record();
         let cell_size = env.grid.cell_size ? env.grid.cell_size : this.grid_map.cell_size;
@@ -242,8 +245,6 @@ class WorldEnvironment extends Environment{
             FossilRecord.addSpeciesObj(species[name]);
         FossilRecord.loadRaw(env.fossil_record);
         SerializeHelper.overwriteNonObjects(env, this);
-        if ($('#override-controls').is(':checked'))
-            Hyperparams.loadJsonObj(env.controls)
         this.renderer.renderFullGrid(this.grid_map.grid);
     }
 }

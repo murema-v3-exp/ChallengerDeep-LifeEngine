@@ -119,10 +119,6 @@
 								<input type="text" id="species-name-edit">
 							</div>
 							<p class='cell-count'>Cell count: </p>
-							<div id='metabolism-cont'>
-								<label for="metabolism-edit" title='Controls movement activity and ongoing food use.'>Metabolism:</label>
-								<input type="number" id="metabolism-edit" min="0.25" max="2" value="1" step="0.01">
-							</div>
 							<div id='move-range-cont'>
 								<label for="move-range-edit" title='The number of cells to move before randomly changing direction. Overriden by brain decisions.'>Move Range:</label>
 								<input type="number" id="move-range-edit" min="1" max="100" value=3 step="1">
@@ -163,15 +159,6 @@
 						<input type="number" id="safe-steps-per-tick" min="1" value=5 step="1" max="100">
 					</div>
 					<div class='right-half'>
-						<h3>Metabolism</h3>
-						<label for="default-metabolism" title='Starting metabolism for new organisms'>Default metabolism:</label>
-						<input type="number" id="default-metabolism" min="0" value="1" step="0.01"><br>
-						<label for="min-metabolism" title='Minimum metabolism an organism can have'>Minimum metabolism:</label>
-						<input type="number" id="min-metabolism" min="0" value="0.25" step="0.01"><br>
-						<label for="max-metabolism" title='Maximum metabolism an organism can have'>Maximum metabolism:</label>
-						<input type="number" id="max-metabolism" min="0" value="2" step="0.01"><br>
-						<label for="metabolism-food-cost" title='Food consumed per tick for each unit of metabolism'>Metabolism food cost:</label>
-						<input type="number" id="metabolism-food-cost" min="0" value="0.002" step="0.001"><br>
 						<br>
 						<button id='random-walls' title="Generates random walls.">Generate random walls</button> <br>
 						<button id="clear-walls" title="Clear All Walls. Hotkey: B">Clear all walls</button>
@@ -226,10 +213,14 @@
 						<button id='load-controls' title="Load saved Evolution Controls with a .json file">Load</button><br>
 						<label for="org-limit" title='Maximum number of organisms (-1 is unlimited)'>Maximum Organisms:</label>
 						<input type="number" id="org-limit" min="-1" value=-1 step="1"><br>
-						<label for="metabolism-mutation-rate" title='Probability that an offspring metabolism will mutate'>Metabolism mutation rate:</label>
-						<input type="number" id="metabolism-mutation-rate" min="0" max="100" value="10" step="1"><br>
-						<label for="metabolism-mutation-step" title='Maximum metabolism change from a mutation'>Metabolism mutation step:</label>
-						<input type="number" id="metabolism-mutation-step" min="0" value="0.1" step="0.01"><br>
+						<label for="min-appetite">Minimum appetite:</label>
+						<input type="number" id="min-appetite" min="1" value="1" step="0.01"><br>
+						<label for="max-appetite">Maximum appetite:</label>
+						<input type="number" id="max-appetite" min="1" value="2" step="0.01"><br>
+						<label for="appetite-mutation-rate">Appetite mutation rate (%):</label>
+						<input type="number" id="appetite-mutation-rate" min="0" max="100" value="0" step="1"><br>
+						<label for="appetite-mutation-step">Appetite mutation step:</label>
+						<input type="number" id="appetite-mutation-step" min="0" value="0.1" step="0.01"><br>
 						<label for="evolved-mutation" title='When on, each organism has its own mutation rate that can increase or decrease. When off, all organisms have the same mutation rate.'>Use evolved mutation rate</label>
 						<input type="checkbox" id="evolved-mutation" checked>
 						<div class="global-mutation-container">
@@ -270,14 +261,12 @@
 						<p id='top-species'>Most Populous Species: </p>
 						<p id='largest-org'>Largest Organism Ever: </p>
 						<p id='avg-mut'>Average Mutation Rate: </p>
-						<p id='metabolism-stats'>Mover Metabolism — Mean: 0, Min: 0, Max: 0</p>
 						<label for="chart-option">Chart: </label>
 						<select name="chart-option" id="chart-option">
 							<option value="population">Population</option>
 							<option value="species">Species</option>
 							<option value="mut-rate">Organism Structure</option>
 							<option value="mut-rate">Mutation Rate</option>
-							<option value="metabolism">Mean Mover Metabolism</option>
 						</select>
 						<p id='chart-note'></p>
 					</div>

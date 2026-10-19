@@ -14,6 +14,14 @@ class MouthCell extends BodyCell{
         for (var loc of Hyperparams.edibleNeighbors){
             var cell = env.grid_map.cellAt(real_c+loc[0], real_r+loc[1]);
             this.eatNeighbor(cell, env);
+            if (this.org.appetite > 1 && cell != null && cell.state == CellStates.producer &&
+                cell.owner != null && cell.owner != this.org && cell.owner.living) {
+                const probability = Math.min(1, Math.max(0, this.org.appetite - 1));
+                if (Math.random() < probability) {
+                    this.org.food_collected++;
+                    cell.owner.harm();
+                }
+            }
         }
     }
 
