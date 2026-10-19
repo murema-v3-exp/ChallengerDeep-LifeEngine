@@ -26,6 +26,26 @@ class ChartController {
         alert("Must override updateData!");
     }
 
+    // adds a right-hand y axis; series opt in with lineSeries(..., secondary=true)
+    useSecondaryAxis(title, maximum=undefined) {
+        this.chart.options.axisY2 = {title: title, minimum: 0};
+        if (maximum !== undefined)
+            this.chart.options.axisY2.maximum = maximum;
+    }
+
+    lineSeries(name, legend_text, color=undefined, secondary=false) {
+        return {
+            type: "line",
+            markerType: "none",
+            color: color,
+            showInLegend: true,
+            name: name,
+            legendText: legend_text,
+            axisYType: secondary ? "secondary" : "primary",
+            dataPoints: []
+        };
+    }
+
     setMinimum() {
         var min = 0;
         if (this.data[0].dataPoints != [])

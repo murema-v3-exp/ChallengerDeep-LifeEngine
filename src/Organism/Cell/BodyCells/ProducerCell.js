@@ -13,6 +13,8 @@ class ProducerCell extends BodyCell{
             return;
         var env = this.org.env;
         var prob = Hyperparams.foodProdProb;
+        if (env.seasons) // the organism editor has no seasons
+            prob *= env.seasons.factor;
         var real_c = this.getRealCol();
         var real_r = this.getRealRow();
         var loc = Hyperparams.growableNeighbors[Math.floor(Math.random() * Hyperparams.growableNeighbors.length)]
