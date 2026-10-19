@@ -6,7 +6,7 @@ const ArmorCell = require("./ArmorCell");
 const EyeCell = require("./EyeCell");
 const AcidStomachCell = require("./AcidStomachCell");
 const CellStates = require("../CellStates");
-
+const SeedCell = require("./SeedCell");
 
 const BodyCellFactory = {
     init: function() {
@@ -18,6 +18,7 @@ const BodyCellFactory = {
         type_map[CellStates.armor.name] = ArmorCell;
         type_map[CellStates.eye.name] = EyeCell;
         type_map[CellStates.acid_stomach.name] = AcidStomachCell;
+        type_map[CellStates.seed.name] = SeedCell;
         this.type_map = type_map;
     },
 

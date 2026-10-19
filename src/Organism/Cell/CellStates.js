@@ -97,6 +97,10 @@ class AcidStomach extends CellState{
     }
 }
 
+class Seed extends CellState {
+    constructor() {super('seed');}
+}
+
 const CellStates = {
     empty: new Empty(),
     food: new Food(),
@@ -109,9 +113,10 @@ const CellStates = {
     eye: new Eye(),
     decaying_food: new DecayingFood(),
     acid_stomach: new AcidStomach,
+    seed: new Seed(),
     defineLists() {
-        this.all = [this.empty, this.food, this.wall, this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye,this.decaying_food,this.acid_stomach]
-        this.living = [this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye, this.acid_stomach];
+        this.all = [this.empty, this.food, this.wall, this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye,this.decaying_food,this.acid_stomach,this.seed]
+        this.living = [this.mouth, this.producer, this.mover, this.killer, this.armor, this.eye, this.acid_stomach,this.seed];
     },
     getRandomName: function() {
         return this.all[Math.floor(Math.random() * this.all.length)].name;

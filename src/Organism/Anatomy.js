@@ -15,6 +15,7 @@ class Anatomy {
         this.is_mover = false;
         this.has_eyes = false;
         this.has_acid_stomach = false;
+        this.has_seed= false;
     }
 
     canAddCellAt(c, r) {
@@ -85,6 +86,8 @@ class Anatomy {
         this.is_mover = false;
         this.has_eyes = false;
         this.has_acid_stomach = false;
+        this.has_seed= false;
+
         for (var cell of this.cells) {
             if (cell.state == CellStates.producer)
                 this.is_producer = true;
@@ -94,6 +97,8 @@ class Anatomy {
                 this.has_eyes = true;
             if(cell.state == CellStates.acid_stomach)
                 this.has_acid_stomach = true;
+            if(cell.state == CellStates.seed)
+                this.has_seed = true;
         }
     }
 

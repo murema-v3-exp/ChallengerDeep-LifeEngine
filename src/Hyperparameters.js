@@ -55,6 +55,7 @@ const Hyperparams = {
         this.fertilityUsedPerFoodProduced = 1;
         this.maxFertility = 10; 
         this.baseFertility = 5;
+        this.dormancy =200;
 
     },
 

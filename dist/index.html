@@ -65,6 +65,7 @@
 							<div class='cell-legend-type' id='food' title="Food: Not part of an organism. Once an organism has eaten enough food, it will reproduce."></div>
 							<div class='cell-legend-type' id='wall' title="Wall: Not part of an organism. Blocks movement and reproduction."></div>
 							<div class='cell-legend-type' id='acid_stomach' title="Acid Stomach: Allows organisms to eat decaying food."></div>
+							<div class='cell-legend-type' id='seed' title="Seed: Offspring start as a dormant seed that sprouts after a delay."></div>
 						</div>
 						<div id="color-scheme-container">
 							<label for="color-scheme-select">Color Scheme:</label>
@@ -111,6 +112,7 @@
 							</div>
 							<div style='grid-column: 3;'>
 								<div class='cell-type' id='acid_stomach' title="Acid Stomach: Allows organisms to eat decaying food."></div>
+								<div class='cell-type' id='seed' title="Seed: Offspring start as a dormant seed that sprouts after a delay"></div>
 								</div>
 
 							<button id='clear-editor'>Clear</button>
@@ -288,6 +290,9 @@
 						<br>
 						<label for="base-fertility" title="Starting fertility of soil, only takes affect on next run">Starting fertility</label>
 						<input type="number" id="base-fertility" value=5 min="1" max="10" step="1">
+						<br>
+						<label for="seed-dormancy" title="Ticks a seed waits before sprouting">Seed dormancy (ticks):</label>
+						<input type="number" id="seed-dormancy" value=200 min="1" max="10000" step="1">
 						<br>
 						<label for="extra-mover-cost" title='Additional food cost for movers to reproduce'>Extra mover reproduction cost:</label>
 						<input type="number" id="extra-mover-cost" value=0 max="1000" step="1">

@@ -14,7 +14,8 @@ const color_schemes = {
         "eye-slit": "#0E1318",
         "decaying_food": "#545213",
         "acid_stomach": "#B5E61D",
-        "soil": "brown"
+        "soil": "brown",
+        "seed":"#FFFFFF"
     },
     "classic":{
         "empty":"#121D29",
@@ -29,7 +30,8 @@ const color_schemes = {
         "eye-slit": "#121D29",
         "decaying_food": "#545213",
         "acid_stomach": "#B5E61D",
-        "soil": "brown"
+        "soil": "brown",
+        "seed":"#FFFFFF"
     },
     "soft":{
         "empty":"#0B0E11",
@@ -44,7 +46,8 @@ const color_schemes = {
         "eye-slit": "#0B0E11",
         "decaying_food": "#545213",
         "acid_stomach": "#B5E61D",
-        "soil": "brown"
+        "soil": "brown",
+        "seed":"#FFFFFF"
     },
     "dark":{
         "empty":"black",
@@ -59,7 +62,8 @@ const color_schemes = {
         "eye-slit": "black",
         "decaying_food": "#545213",
         "acid_stomach": "#B5E61D",
-        "soil": "brown"
+        "soil": "brown",
+        "seed":"#FFFFFF"
     },
     "grayscale":{
         "empty":"black",
@@ -74,7 +78,8 @@ const color_schemes = {
         "eye-slit": "black",
         "decaying_food": "#545213",
         "acid_stomach": "#B5E61D",
-        "soil": "brown"
+        "soil": "brown",
+        "seed":"#FFFFFF"
     }
 }
 const color_scheme_names = Object.keys(color_schemes);

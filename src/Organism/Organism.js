@@ -29,6 +29,7 @@ class Organism {
         if (parent != null) {
             this.inherit(parent);
         }
+        this.seed = null;
     }
 
     inherit(parent) {
@@ -94,8 +95,10 @@ class Organism {
         var basemovement = this.anatomy.birth_distance;
         var new_c = this.c + (direction_c*basemovement) + (direction_c*offset);
         var new_r = this.r + (direction_r*basemovement) + (direction_r*offset);
-
-        if (org.isClear(new_c, new_r, org.rotation, true) && 
+        if(this.anatomy.has_seed){
+this.seeder(org,new_c,new_r,mutated);
+        }
+        else if (org.isClear(new_c, new_r, org.rotation, true) && 
             org.isStraightPath(new_c, new_r, this.c, this.r, this) && 
             this.env.canAddOrganism())
         {
@@ -325,6 +328,8 @@ class Organism {
 
     update() {
         this.lifetime++;
+        if(this.seed)
+            return this.updateSeed();
         if (this.lifetime > this.lifespan()) {
             this.die();
             return this.living;
@@ -430,6 +435,9 @@ class Organism {
         org.anatomy = this.anatomy.serialize();
         if (this.anatomy.is_mover && this.anatomy.has_eyes)
             org.brain = this.brain.serialize();
+        if(this.seed){
+            org.seed=this.seed.serialize();
+        }
         org.species_name = this.species.name;
         return org;
     }
@@ -438,8 +446,51 @@ class Organism {
         SerializeHelper.overwriteNonObjects(org, this);
         this.appetite = this.clampAppetite(org.appetite);
         this.anatomy.loadRaw(org.anatomy)
+        if(org.seed){
+            this.seed = new Organism(0,0,this.env);
+            this.seed.loadRaw(org.seed);
+        }
         if (org.brain)
             this.brain.copy(org.brain)
+    }
+
+    seeder(child,c,r,mutated){
+        var seed = new Organism(c,r,this.env);
+        seed.mutability = child.mutability;
+        seed.anatomy.addDefaultCell(CellStates.seed,0,0);
+        if(!seed.isClear(c,r)||!seed.isStraightPath(c,r,this.c,this.r,this)||!this.env.canAddOrganism()) return;
+        if(mutated){
+             FossilRecord.addSpecies(child,this.species);
+        }else{ child.species.addPop()};
+
+        seed.seed =child;
+        seed.species = child.species;
+        this.env.addOrganism(seed);
+
+        seed.updateGrid();
+        this.num_offspring++;
+        FossilRecord.recordBirth();
+
+    }
+    updateSeed(){
+        var hibernation = 2;
+        if(this.lifetime<Hyperparams.dormancy){
+            return this.living;
+        }
+        this.env.changeCell(this.c,this.r,CellStates.empty,null);
+        if(this.seed.isClear(this.c,this.r)){
+            this.seed.c = this.c;
+            this.seed.r = this.r;
+            this.env.addOrganism(this.seed);
+            this.seed.updateGrid();
+            this.living = false;
+            return false;
+        }
+        this.updateGrid();
+        if(this.lifetime>hibernation*Hyperparams.dormancy){
+            this.die();
+        }
+        return this.living;
     }
 
 }

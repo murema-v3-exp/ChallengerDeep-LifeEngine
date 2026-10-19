@@ -285,6 +285,9 @@ class WorldEnvironment extends Environment{
             }
             s.name = orgRaw.species_name;
             org.species = s;
+            if(org.seed){
+                org.seed.species=s;
+            }
         }
         for (let name in species)
             FossilRecord.addSpeciesObj(species[name]);

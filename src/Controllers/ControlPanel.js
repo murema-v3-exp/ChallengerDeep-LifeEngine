@@ -543,6 +543,12 @@ class ControlPanel {
         $("#base-fertility").change((e)=>{
             Hyperparams.baseFertility = parseInt(e.target.value);
         });
+        $('#seed-dormancy').change(function(){
+            const v = parseInt($('#seed-dormancy').val());
+            Hyperparams.dormancy = v;
+            $('#seed-dormancy').val(Hyperparams.dormancy);
+        });
+
     }
 
     setHyperparamDefaults() {
@@ -588,6 +594,7 @@ class ControlPanel {
         $('#base-fertility').val(Hyperparams.baseFertility);
 
         $('#decay-to-fertiliser-ticks').val(Hyperparams.decayToFertiliser);
+        $('#seed-dormancy').val(Hyperparams.dormancy);
 
         if (!Hyperparams.useGlobalMutability) {
             $('.global-mutation-container').css('display', 'none');
