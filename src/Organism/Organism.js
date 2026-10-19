@@ -21,6 +21,7 @@ class Organism {
         this.rotation = Directions.up; // direction of rotation
         this.move_count = 0;
         this.move_range = 4;
+        this.appetite = this.clampAppetite(Hyperparams.defaultAppetite);
         this.ignore_brain_for = 0;
         this.mutability = 5;
         this.damage = 0;
@@ -32,6 +33,7 @@ class Organism {
 
     inherit(parent) {
         this.move_range = parent.move_range;
+        this.appetite = this.clampAppetite(parent.appetite);
         this.mutability = parent.mutability;
         this.species = parent.species;
         for (var c of parent.anatomy.cells){
@@ -75,6 +77,11 @@ class Organism {
                     org.mutability = 1;
             }
         } 
+        if (Hyperparams.appetiteMutationRate > 0 && !org.anatomy.is_producer &&
+            this.calcRandomChance(Hyperparams.appetiteMutationRate)) {
+            const change = (Math.random() * 2 - 1) * Hyperparams.appetiteMutationStep;
+            org.appetite = org.clampAppetite(org.appetite + change);
+        }
         var mutated = false;
         if (this.calcRandomChance(prob)) {
             mutated = org.mutate();
@@ -182,6 +189,12 @@ class Organism {
 
     calcRandomChance(prob) {
         return (Math.random() * 100) < prob;
+    }
+
+    clampAppetite(appetite) {
+        if (!Number.isFinite(appetite))
+            return 1;
+        return Math.min(Hyperparams.maxAppetite, Math.max(Hyperparams.minAppetite, appetite));
     }
 
     attemptMove() {
@@ -423,6 +436,7 @@ class Organism {
 
     loadRaw(org) {
         SerializeHelper.overwriteNonObjects(org, this);
+        this.appetite = this.clampAppetite(org.appetite);
         this.anatomy.loadRaw(org.anatomy)
         if (org.brain)
             this.brain.copy(org.brain)

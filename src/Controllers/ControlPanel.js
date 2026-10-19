@@ -427,6 +427,18 @@ class ControlPanel {
         $('#org-limit').change(function() {
             Hyperparams.maxOrganisms = parseInt($('#org-limit').val());
         });
+        $('#min-appetite').change(function() {
+            Hyperparams.minAppetite = parseFloat($('#min-appetite').val());
+        });
+        $('#max-appetite').change(function() {
+            Hyperparams.maxAppetite = parseFloat($('#max-appetite').val());
+        });
+        $('#appetite-mutation-rate').change(function() {
+            Hyperparams.appetiteMutationRate = parseFloat($('#appetite-mutation-rate').val());
+        });
+        $('#appetite-mutation-step').change(function() {
+            Hyperparams.appetiteMutationStep = parseFloat($('#appetite-mutation-step').val());
+        });
 
         $('#evolved-mutation').change( function() {
             if (this.checked) {
@@ -559,6 +571,10 @@ class ControlPanel {
         $('#food-drop-rate').val(Hyperparams.foodDropProb);
         $('#extra-mover-cost').val(Hyperparams.extraMoverFoodCost);
         $('#org-limit').val(Hyperparams.maxOrganisms);
+        $('#min-appetite').val(Hyperparams.minAppetite);
+        $('#max-appetite').val(Hyperparams.maxAppetite);
+        $('#appetite-mutation-rate').val(Hyperparams.appetiteMutationRate);
+        $('#appetite-mutation-step').val(Hyperparams.appetiteMutationStep);
         $('#look-range').val(Hyperparams.lookRange);
         $('#see-through-self').prop('checked', Hyperparams.seeThroughSelf);
         $('#global-mutation').val(Hyperparams.globalMutability);

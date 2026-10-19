@@ -241,6 +241,14 @@
 						<button id='load-controls' title="Load saved Evolution Controls with a .json file">Load</button><br>
 						<label for="org-limit" title='Maximum number of organisms (-1 is unlimited)'>Maximum Organisms:</label>
 						<input type="number" id="org-limit" min="-1" value=-1 step="1"><br>
+						<label for="min-appetite">Minimum appetite:</label>
+						<input type="number" id="min-appetite" min="1" value="1" step="0.01"><br>
+						<label for="max-appetite">Maximum appetite:</label>
+						<input type="number" id="max-appetite" min="1" value="2" step="0.01"><br>
+						<label for="appetite-mutation-rate">Appetite mutation rate (%):</label>
+						<input type="number" id="appetite-mutation-rate" min="0" max="100" value="0" step="1"><br>
+						<label for="appetite-mutation-step">Appetite mutation step:</label>
+						<input type="number" id="appetite-mutation-step" min="0" value="0.1" step="0.01"><br>
 						<label for="evolved-mutation" title='When on, each organism has its own mutation rate that can increase or decrease. When off, all organisms have the same mutation rate.'>Use evolved mutation rate</label>
 						<input type="checkbox" id="evolved-mutation" checked>
 						<div class="global-mutation-container">

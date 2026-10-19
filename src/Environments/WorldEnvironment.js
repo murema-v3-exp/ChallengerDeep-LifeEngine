@@ -245,6 +245,9 @@ class WorldEnvironment extends Environment{
     }
 
     loadRaw(env) { // species name->stats map, evolution controls, 
+        if ($('#override-controls').is(':checked')) {
+            Hyperparams.loadJsonObj(env.controls || {});
+        }
         this.organisms = [];
         SeasonStats.reset(); // season stats are not saved with worlds
         this.food_queue =[];

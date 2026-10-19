@@ -32,6 +32,12 @@ const Hyperparams = {
 
         this.extraMoverFoodCost = 0;
 
+        this.defaultAppetite = 1;
+        this.minAppetite = 1;
+        this.maxAppetite = 2;
+        this.appetiteMutationRate = 0;
+        this.appetiteMutationStep = 0.1;
+
         this.maxOrganisms = -1;
 
         // Seasons
@@ -53,6 +59,8 @@ const Hyperparams = {
     },
 
     loadJsonObj(obj) {
+        Object.assign(this, {defaultAppetite: 1, minAppetite: 1, maxAppetite: 2,
+            appetiteMutationRate: 0, appetiteMutationStep: 0.1});
         for (let key in obj) {
             this[key] = obj[key];
         }
