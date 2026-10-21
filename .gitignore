@@ -9,3 +9,4 @@ run_sweep.js
 summarize_runs.py
 src/beepboop.js
 make_variants.py
+__pycache__
