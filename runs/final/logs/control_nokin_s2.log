@@ -1,0 +1,4 @@
+[headless] Starting: seed=2 max_ticks=100000 grid=301x145 foodDecay=false soilFertility=false seasons=false appetiteMutationRate=0 dormancy=200 load=worlds/All_animals_and_plants_world_Liam.json
+[headless] Extinction at tick 22932 - stopping early.
+[headless] Done - 22932 ticks in 65.11s (extinction)
+[headless] Results written to runs\final\control_nokin_s2.json and runs\final\control_nokin_s2.csv

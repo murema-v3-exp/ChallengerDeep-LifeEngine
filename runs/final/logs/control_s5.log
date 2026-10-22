@@ -1,0 +1,4 @@
+[headless] Starting: seed=5 max_ticks=100000 grid=301x145 foodDecay=false soilFertility=false seasons=false appetiteMutationRate=0 dormancy=200 load=worlds/All_animals_and_plants_world_Liam.json
+[headless] Extinction at tick 32921 - stopping early.
+[headless] Done - 32921 ticks in 114.52s (extinction)
+[headless] Results written to runs\final\control_s5.json and runs\final\control_s5.csv

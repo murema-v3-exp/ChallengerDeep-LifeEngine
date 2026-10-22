@@ -2,7 +2,6 @@ node_modules/*
 dist/js/bundle.js
 ./package-lock.json
 dist/js/bundle.js.LICENSE.txt
-runs/*
 worlds/*
 plot_runs.py
 run_sweep.js
@@ -10,3 +9,4 @@ summarize_runs.py
 src/beepboop.js
 make_variants.py
 __pycache__
+plot_lineup.py

@@ -1,0 +1,312 @@
+{
+  "world": "worlds/All_animals_and_plants_world_Liam.json",
+  "ticks": 100000,
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "max_orgs": 1500,
+  "conditions": {
+    "control": {
+      "foodDecay": false,
+      "soilFertility": false,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0
+    },
+    "decay_fd500": {
+      "foodDecay": true,
+      "soilFertility": false,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 500
+    },
+    "decay_fd250": {
+      "foodDecay": true,
+      "soilFertility": false,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 250
+    },
+    "decay_fd750": {
+      "foodDecay": true,
+      "soilFertility": false,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 750
+    },
+    "decay_fd1000": {
+      "foodDecay": true,
+      "soilFertility": false,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000
+    },
+    "decay_fd2000": {
+      "foodDecay": true,
+      "soilFertility": false,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 2000
+    },
+    "both_base": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_fd500": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 500,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_fd1000": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_fd2000": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 2000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_fd4000": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 4000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_dtf500": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 500,
+      "baseFertility": 5,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_dtf2000": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 2000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_dtf1000": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_bf2": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 2,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_bf8": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 8,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "control_noblock": {
+      "foodDecay": false,
+      "soilFertility": false,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodBlocksReproduction": false
+    },
+    "decay_fd1000_noblock": {
+      "foodDecay": true,
+      "soilFertility": false,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "foodBlocksReproduction": false
+    },
+    "both_dtf250": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 250,
+      "baseFertility": 5,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_dtf4000": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 4000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "control_nokin": {
+      "foodDecay": false,
+      "soilFertility": false,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "dontKillSameSpecies": true
+    },
+    "control_nokin_no_block": {
+      "foodDecay": false,
+      "soilFertility": false,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodBlocksReproduction": false,
+      "dontKillSameSpecies": true
+    },
+    "both_fpd0": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 0,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_fpd05": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 0.5,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_fpd1": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_fpd2": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 2,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_fpd4": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 4,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_fpd10": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 10,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "both_fpd20": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": false,
+      "appetiteMutationRate": 0,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 20,
+      "fertilityUsedPerFoodProduced": 1
+    },
+    "all_features": {
+      "foodDecay": true,
+      "soilFertility": true,
+      "seasonsEnabled": true,
+      "appetiteMutationRate": 10,
+      "foodDecayTicks": 1000,
+      "decayToFertiliser": 1000,
+      "baseFertility": 5,
+      "fertilityPerDecay": 1,
+      "fertilityUsedPerFoodProduced": 1,
+      "seasonMode": "regular",
+      "seasonLength": 4000,
+      "winterSeverity": 0.6,
+      "appetiteMutationStep": 0.1,
+      "minAppetite": 1,
+      "maxAppetite": 2,
+      "dormancy": 200
+    }
+  }
+}

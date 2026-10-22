@@ -1,0 +1,5 @@
+[headless] Starting: seed=1 max_ticks=100000 grid=301x145 foodDecay=false soilFertility=false seasons=false appetiteMutationRate=0 dormancy=200 load=worlds/All_animals_and_plants_world_Liam.json
+[headless] tick=50000 pop=498 species=14 acid=1 food=527 decaying=0 meanFert=5 seeds=2 appetite=1 season=1 186 ticks/s
+[headless] tick=100000 pop=669 species=18 acid=0 food=994 decaying=0 meanFert=5 seeds=0 appetite=1 season=1 180 ticks/s
+[headless] Done - 100000 ticks in 555.85s (reached max-ticks)
+[headless] Results written to runs\final\control_nokin_s1.json and runs\final\control_nokin_s1.csv

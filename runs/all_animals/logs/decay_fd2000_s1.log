@@ -1,0 +1,5 @@
+[headless] Starting: seed=1 max_ticks=100000 grid=301x145 foodDecay=true soilFertility=false seasons=false appetiteMutationRate=0 dormancy=200 load=worlds/All_animals_and_plants_world_Liam.json
+[headless] tick=50000 pop=6 species=1 acid=0 food=1974 decaying=14525 meanFert=5 seeds=0 appetite=0 season=1 247 ticks/s
+[headless] Extinction at tick 50817 - stopping early.
+[headless] Done - 50817 ticks in 202.84s (extinction)
+[headless] Results written to runs\all_animals\decay_fd2000_s1.json and runs\all_animals\decay_fd2000_s1.csv

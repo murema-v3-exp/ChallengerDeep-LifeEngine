@@ -1,0 +1,5 @@
+[headless] Starting: seed=2 max_ticks=100000 grid=301x145 foodDecay=true soilFertility=true seasons=false appetiteMutationRate=0 dormancy=200 load=worlds/All_animals_and_plants_world_Liam.json
+[headless] tick=50000 pop=775 species=56 acid=8 food=6664 decaying=1695 meanFert=0.2241 seeds=53 appetite=1 season=1 101 ticks/s
+[headless] tick=100000 pop=1480 species=88 acid=44 food=4662 decaying=424 meanFert=0.1068 seeds=272 appetite=1 season=1 105 ticks/s
+[headless] Done - 100000 ticks in 956.43s (reached max-ticks)
+[headless] Results written to runs\all_animals\both_dtf500_s2.json and runs\all_animals\both_dtf500_s2.csv

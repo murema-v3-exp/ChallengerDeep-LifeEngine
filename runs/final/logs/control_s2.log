@@ -1,0 +1,5 @@
+[headless] Starting: seed=2 max_ticks=100000 grid=301x145 foodDecay=false soilFertility=false seasons=false appetiteMutationRate=0 dormancy=200 load=worlds/All_animals_and_plants_world_Liam.json
+[headless] tick=50000 pop=195 species=20 acid=1 food=722 decaying=0 meanFert=5 seeds=0 appetite=1 season=1 213 ticks/s
+[headless] Extinction at tick 65331 - stopping early.
+[headless] Done - 65331 ticks in 247.41s (extinction)
+[headless] Results written to runs\final\control_s2.json and runs\final\control_s2.csv
